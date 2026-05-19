@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Cutting Calculator • Sewtech</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #eafaf5;
+            padding: 1.2rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-card {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            border-radius: 36px;
+            box-shadow: 0 20px 40px rgba(0, 50, 30, 0.15);
+            padding: 1.8rem 1.5rem 2rem;
+            border: 1px solid #cde3db;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .brand {
+            font-family: 'Rubik Glitch', system-ui;
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, #0a5e46, #1f8868);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        .about-btn {
+            background: #0f5e47;
+            color: white;
+            border: none;
+            padding: 0.55rem 1.4rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: 0.2s;
+        }
+        .about-btn:active {
+            background: #094b38;
+            transform: scale(0.96);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #115e48;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hint {
+            font-weight: 400;
+            font-size: 0.8rem;
+            color: #2f6e5a;
+            background: #e2f3ed;
+            padding: 0.1rem 0.8rem;
+            border-radius: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.9rem 1.1rem;
+            font-size: 1rem;
+            border: 2px solid #d4e8e1;
+            border-radius: 20px;
+            background: #fafffc;
+            outline: none;
+            font-family: inherit;
+            transition: 0.2s;
+            font-weight: 500;
+            color: #1a3b30;
+        }
+
+        input:focus {
+            border-color: #1c6e53;
+            box-shadow: 0 0 0 3px rgba(28, 110, 83, 0.15);
+            background: white;
+        }
+
+        .short-badge {
+            background: #ffeedb;
+            color: #b45f2a;
+            padding: 0.6rem 1rem;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-top: 0.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .calc-info {
+            background: #f4faf7;
+            padding: 1rem;
+            border-radius: 20px;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: #1e4f3f;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: 40px;
+            padding: 2rem 1.8rem;
+            text-align: center;
+            max-width: 300px;
+            width: 80%;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.25);
+            animation: pop 0.2s;
+        }
+
+        .modal-card h3 {
+            font-size: 1.6rem;
+            color: #115e48;
+            margin-bottom: 1rem;
+        }
+
+        .modal-card .detail {
+            background: #f6fbf9;
+            padding: 0.7rem;
+            border-radius: 24px;
+            margin: 0.6rem 0;
+            font-weight: 500;
+        }
+
+        .close-btn {
+            background: #1c6e53;
+            border: none;
+            color: white;
+            padding: 0.6rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            margin-top: 1rem;
+            cursor: pointer;
+        }
+
+        @keyframes pop {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .brand {
+                font-size: 1.3rem;
+            }
+            .main-card {
+                padding: 1.5rem 1rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&family=Inter:opsz,wght@14..32,400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-card">
+        <div class="header">
+            <div class="brand">Sewtech Fashion Limited</div>
+            <button class="about-btn" id="aboutBtn">About Me</button>
+        </div>
+
+        <div class="input-group">
+            <label>📏 Marker Length <span class="hint">meter</span></label>
+            <input type="number" id="markerLength" step="any" placeholder="e.g. 14.97" inputmode="decimal">
+        </div>
+
+        <div class="input-group">
+            <label>🧵 Roll Yards <span class="hint">yd</span></label>
+            <input type="number" id="rollYards" step="any" placeholder="e.g. 54" inputmode="decimal">
+        </div>
+
+        <div class="input-group">
+            <label>📚 Layer Count <span class="hint" id="maxLayerHint"></span></label>
+            <input type="number" id="layerCount" step="1" placeholder="" inputmode="numeric">
+        </div>
+
+        <div class="input-group">
+            <label>⚖️ Balance <span class="hint">meter</span></label>
+            <input type="number" id="balanceInput" step="any" placeholder="" inputmode="decimal">
+        </div>
+
+        <div id="shortArea" style="display: none;">
+            <span class="short-badge" id="shortValue">Short: 0.00 m</span>
+        </div>
+
+        <div class="calc-info" id="infoBox">
+            <span>📐 Meters: <strong id="metersVal">—</strong></span>
+            <span>📊 Max layers: <strong id="maxLayersVal">—</strong></span>
+        </div>
+    </div>
+
+    <div id="aboutModal" class="modal">
+        <div class="modal-card">
+            <h3>👤 Omar Faruk</h3>
+            <div class="detail">Cutting Department</div>
+            <button class="close-btn" id="closeModal">Close</button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const markerInput = document.getElementById('markerLength');
+            const yardsInput = document.getElementById('rollYards');
+            const layerInput = document.getElementById('layerCount');
+            const balanceInput = document.getElementById('balanceInput');
+            const maxLayerHint = document.getElementById('maxLayerHint');
+            const metersValSpan = document.getElementById('metersVal');
+            const maxLayersValSpan = document.getElementById('maxLayersVal');
+            const shortArea = document.getElementById('shortArea');
+            const shortValueSpan = document.getElementById('shortValue');
+
+            const aboutBtn = document.getElementById('aboutBtn');
+            const modal = document.getElementById('aboutModal');
+            const closeModal = document.getElementById('closeModal');
+
+            const YARD_TO_METER = 1.0936;
+
+            function floorTo2(num) {
+                return Math.floor(num * 100) / 100;
+            }
+
+            function calculate() {
+                const yards = parseFloat(yardsInput.value);
+                const marker = parseFloat(markerInput.value);
+                const layer = layerInput.value.trim() === '' ? NaN : parseInt(layerInput.value, 10);
+                const userBalance = balanceInput.value.trim() === '' ? NaN : parseFloat(balanceInput.value);
+
+                metersValSpan.textContent = '—';
+                maxLayersValSpan.textContent = '—';
+                maxLayerHint.textContent = '';
+                balanceInput.placeholder = '';
+                shortArea.style.display = 'none';
+                layerInput.placeholder = '';
+
+                if (isNaN(yards) || yards <= 0) return;
+
+                const meters = yards / YARD_TO_METER;
+                const metersRounded = floorTo2(meters);
+                metersValSpan.textContent = metersRounded.toFixed(2);
+
+                if (isNaN(marker) || marker <= 0) return;
+
+                const maxLayers = Math.floor(metersRounded / marker);
+                maxLayersValSpan.textContent = maxLayers;
+                maxLayerHint.textContent = `max ${maxLayers}`;
+                layerInput.placeholder = maxLayers;
+
+                const effectiveLayer = isNaN(layer) ? maxLayers : Math.min(layer, maxLayers);
+
+                const autoBalance = metersRounded - (effectiveLayer * marker);
+                const autoBalanceRounded = floorTo2(autoBalance);
+
+                if (!isNaN(userBalance)) {
+                    balanceInput.placeholder = '';
+                } else {
+                    balanceInput.placeholder = autoBalanceRounded.toFixed(2);
+                    balanceInput.value = '';
+                }
+
+                if (!isNaN(layer)) {
+                    const balanceForCalc = !isNaN(userBalance) ? userBalance : autoBalanceRounded;
+                    const totalUsed = effectiveLayer * marker + balanceForCalc;
+                    const difference = totalUsed - metersRounded;
+                    if (difference < -0.001) {
+                        shortValueSpan.textContent = `Short: ${floorTo2(Math.abs(difference)).toFixed(2)} m`;
+                        shortArea.style.display = 'block';
+                    } else {
+                        shortArea.style.display = 'none';
+                    }
+                } else {
+                    shortArea.style.display = 'none';
+                }
+            }
+
+            [markerInput, yardsInput, layerInput, balanceInput].forEach(inp => {
+                inp.addEventListener('input', calculate);
+                inp.addEventListener('change', calculate);
+            });
+
+            balanceInput.addEventListener('input', function() {
+                if (this.value.trim() === '') calculate();
+            });
+
+            aboutBtn.addEventListener('click', () => modal.style.display = 'flex');
+            closeModal.addEventListener('click', () => modal.style.display = 'none');
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+
+            calculate();
+        })();
+    </script>
+</body>
+</html>
