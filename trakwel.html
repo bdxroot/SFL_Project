@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cutting & OC Planning Tool | Sewtech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #eafaf5;
+            --primary-green: #0a5e46;
+            --accent-green: #1f8868;
+            --white: #ffffff;
+            --text-dark: #1e3b33;
+            --border-light: #cde3db;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Header --- */
+        header {
+            background: var(--white);
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        .brand {
+            font-family: 'Rubik Glitch', cursive;
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .about-btn {
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* --- Layout --- */
+        .container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* --- Sidebar (Style List) --- */
+        .sidebar {
+            background: var(--white);
+            border-right: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-container {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-light);
+            border-radius: 10px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .style-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .style-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .style-item:hover { background: #f4fbf8; }
+        .style-item.active {
+            background: #eaf5f1;
+            border-left: 5px solid var(--primary-green);
+            font-weight: 700;
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+            background: #f9fdfc;
+        }
+
+        .style-header-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            margin-bottom: 20px;
+            border: 1px solid var(--border-light);
+        }
+
+        .oc-row {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .oc-badge {
+            background: #eef4f1;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        /* --- BOM Table --- */
+        .table-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-light);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            text-align: left;
+            background: #f4fbf8;
+            padding: 12px;
+            font-size: 0.9rem;
+            color: var(--primary-green);
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95rem;
+        }
+
+        .pdm-badge { background: #e3f2fd; color: #1565c0; padding: 4px 8px; border-radius: 4px; font-family: monospace; }
+        .tw-badge { background: #fff3e0; color: #e65100; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-weight: bold; }
+
+        /* --- Modal --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center; align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white; padding: 25px; border-radius: 20px; width: 350px; text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+            .sidebar { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="brand">Sewtech Fashion Limited</div>
+    <button class="about-btn" id="aboutBtn">👤 About Me</button>
+</header>
+
+<div class="container">
+    <aside class="sidebar">
+        <div class="search-container">
+            <input type="text" id="styleSearch" class="search-input" placeholder="Search Style (e.g. 1247)...">
+        </div>
+        <div class="style-list" id="styleList">
+            </div>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+        <div style="text-align: center; margin-top: 100px; color: #888;">
+            <h2>Welcome to Cutting Dept Tool</h2>
+            <p>Please select a Style Code from the left to see details.</p>
+        </div>
+    </main>
+</div>
+
+<div class="modal" id="aboutModal">
+    <div class="modal-content">
+        <h3>User Profile</h3>
+        <hr style="margin: 15px 0; opacity: 0.2;">
+        <p><strong>Name:</strong> Omar Faruk</p>
+        <p><strong>ID:</strong> 60849422</p>
+        <p><strong>Dept:</strong> Cutting </p>
+        <button class="about-btn" style="margin-top: 15px; width: 100%;" onclick="closeModal()">Close</button>
+    </div>
+</div>
+
+<script>
+    const styleData = [
+        { style: "1247", oc: ["758", "818", "818.2", ""] },
+        { style: "2385", oc: ["650", "717", "756", ""] },
+        { style: "3951", oc: ["657", "693", "738", "783.1"] },
+        { style: "2950", oc: ["628", "", "", ""] },
+        { style: "6316", oc: ["625", "", "", ""] },
+        { style: "2953", oc: ["629", "", "", ""] },
+        { style: "8515", oc: ["626", "", "", ""] },
+        { style: "6357", oc: ["627", "", "", ""] },
+        { style: "H448", oc: ["747", "", "", ""] },
+        { style: "P448", oc: ["746", "", "", ""] },
+        { style: "P443", oc: ["743", "", "", ""] },
+        { style: "2020", oc: ["686", "", "", ""] },
+        { style: "3100", oc: ["887", "", "", ""] },
+        { style: "3099", oc: ["885", "", "", ""] },
+        { style: "3097", oc: ["883", "", "", ""] },
+        { style: "3098", oc: ["884", "", "", ""] },
+        { style: "3101", oc: ["886", "", "", ""] },
+        { style: "H438", oc: ["744", "", "", ""] },
+        { style: "H534", oc: ["745", "", "", ""] },
+        { style: "0163", oc: ["648", "691", "771", ""] },
+        { style: "P534", oc: ["748", "745", "", ""] },
+        { style: "439", oc: ["628", "", "", ""] },
+        { style: "3384", oc: ["755", "815", "", ""] },
+        { style: "1X305", oc: ["176", "", "", ""] }
+        // Add more styles as needed
+    ];
+
+    const bomData = {
+        "1247": [
+            { component: "Shell Fabric", pdm: "120360", tw: "FAB-FLAT-0227" },
+            { component: "Lining 1", pdm: "120364", tw: "FAB-CANVAS-0215" }
+        ],
+        "2385": [
+            { component: "Shell Fabric", pdm: "120364", tw: "FAB-CANVAS-0215" },
+            { component: "Lining-1", pdm: "058818", tw: "FAB-FLEECE-0005" },
+            { component: "Lining-2", pdm: "072367", tw: "FAB-PLAIN-0110" },
+            { component: "Lining-3", pdm: "025866", tw: "FAB-PLAIN-0216" },
+            { component: "Lining-4", pdm: "004476", tw: "FAB-TRICOT-0013" },
+            { component: "Insulation", pdm: "106365", tw: "FAB-PLAIN-0230" },
+            { component: "Insulation-1", pdm: "110671", tw: "" },
+            { component: "Neddle Punch", pdm: "300031", tw: "FAB-PLAIN-0210" },
+            { component: "Screem", pdm: "", tw: "" }
+        ],
+        "3951": [
+            { component: "SH-A", pdm: "129988", tw: "FAB-PLAIN-0198" },
+            { component: "Lining-1", pdm: "69683", tw: "FAB-PLAIN-0199" },
+            { component: "Lining-2", pdm: "122599", tw: "FAB-PLAIN-0201" },
+            { component: "Lining-3", pdm: "72367", tw: "FAB-PLAIN-0110" },
+            { component: "Lining-4", pdm: "032201", tw: "FAB-PLAIN-0202" },
+            { component: "Lining-5", pdm: "004476", tw: "FAB-TRICOT-0013" },
+            { component: "Padding-1 (80 GSM)", pdm: "106364", tw: "FAB-PLAIN-0211" },
+            { component: "Padding-2 (60 GSM)", pdm: "106363", tw: "FAB-PLAIN-0209" },
+            { component: "Neddle Punch White", pdm: "300031", tw: "FAB-PLAIN-0210" },
+            { component: "Interlinin & Heavy-2", pdm: "011958", tw: "" },
+            { component: "Interlinin & Soft-1", pdm: "011960", tw: "" }
+        ]
+    };
+
+    
+    const styleListEl = document.getElementById('styleList');
+    const mainContentEl = document.getElementById('mainContent');
+    const styleSearchInput = document.getElementById('styleSearch');
+
+    function renderStyles(filter = "") {
+        styleListEl.innerHTML = "";
+        const filtered = styleData.filter(s => s.style.includes(filter));
+        
+        filtered.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'style-item';
+            div.innerHTML = `<span>Style: <b>${item.style}</b></span> <span>▶</span>`;
+            div.onclick = () => loadStyleDetails(item.style);
+            styleListEl.appendChild(div);
+        });
+    }
+
+    function loadStyleDetails(styleCode) {
+        // Active Class Update
+        document.querySelectorAll('.style-item').forEach(el => el.classList.remove('active'));
+        const activeItem = [...document.querySelectorAll('.style-item')].find(el => el.innerText.includes(styleCode));
+        if(activeItem) activeItem.classList.add('active');
+
+        const styleObj = styleData.find(s => s.style === styleCode);
+        const components = bomData[styleCode] || [];
+
+        let ocBadges = styleObj.oc.filter(o => o !== "").map(o => `<span class="oc-badge">OC: ${o}</span>`).join("");
+
+        let tableRows = components.map(c => `
+            <tr>
+                <td>${c.component}</td>
+                <td><span class="pdm-badge">${c.pdm}</span></td>
+                <td><span class="tw-badge">${c.tw}</span></td>
+            </tr>
+        `).join("");
+
+        if(components.length === 0) {
+            tableRows = `<tr><td colspan="3" style="text-align:center; color:#999; padding:20px;">No BOM Data added for this style.</td></tr>`;
+        }
+
+        mainContentEl.innerHTML = `
+            <div class="style-header-card">
+                <h2 style="color: var(--primary-green)">Style Code: ${styleCode}</h2>
+                <div class="oc-row">
+                    ${ocBadges}
+                </div>
+            </div>
+
+            <div class="table-card">
+                <h3 style="margin-bottom: 15px;">Fabric & Component BOM</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Component Name</th>
+                            <th>PDM Code</th>
+                            <th>Trackwel Code</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRows}
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }
+
+    // Search event
+    styleSearchInput.oninput = (e) => renderStyles(e.target.value);
+
+    // Modal logic
+    const modal = document.getElementById('aboutModal');
+    document.getElementById('aboutBtn').onclick = () => modal.style.display = 'flex';
+    function closeModal() { modal.style.display = 'none'; }
+
+    // Initial Load
+    renderStyles();
+
+</script>
+</body>
+</html>
