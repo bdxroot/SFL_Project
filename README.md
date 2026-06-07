@@ -13,10 +13,9 @@ You can access and test the deployed version of the application directly here:
 
 ## ✨ Features
 
-* **⚡ Pure CSS Text Animation:** Includes a unique, loop-based typing and word-erasing animation ("Sewtech" ➔ "Fashion" ➔ "Limited") on the navbar.
+
 * **🔍 Instant Search/Filter:** Filter complex Style Codes instantly as you type.
 * **📊 Complete BOM Overview:** Organized, clean tables highlighting Component Names, PDM Codes, and Trackwel Trackings.
-* **🎨 Modern UI/UX:** Styled with a premium factory-green theme (`#0a5e46`), using glassmorphic blurs (`backdrop-filter`) and smooth transitions.
 * **📱 Fully Responsive:** Adaptive split-screen layout for desktops and an optimized scrollable layout for mobile devices.
 
 ---
