@@ -114,8 +114,6 @@
         }
 
         .short-badge {
-            background: #ffeedb;
-            color: #b45f2a;
             padding: 0.6rem 1rem;
             border-radius: 30px;
             font-weight: 700;
@@ -123,6 +121,7 @@
             display: inline-block;
             margin-top: 0.3rem;
             margin-bottom: 1rem;
+            transition: 0.2s;
         }
 
         .calc-info {
@@ -222,7 +221,12 @@
         </div>
 
         <div class="input-group">
-            <label>🧵 Roll Yards <span class="hint">yd</span></label>
+            <label>🧵 Roll Yards/Mitter <span class="hint"><section>
+                <select name="cal-type" id="cal-type" class="hint">
+                    <option value="yd">Yards</option>
+                    <option value="m">Meters</option>
+                </select>
+            </section></span></label>
             <input type="number" id="rollYards" step="any" placeholder="e.g. 54" inputmode="decimal">
         </div>
 
@@ -260,6 +264,7 @@
             const yardsInput = document.getElementById('rollYards');
             const layerInput = document.getElementById('layerCount');
             const balanceInput = document.getElementById('balanceInput');
+            const calTypeSelect = document.getElementById('cal-type');
             const maxLayerHint = document.getElementById('maxLayerHint');
             const metersValSpan = document.getElementById('metersVal');
             const maxLayersValSpan = document.getElementById('maxLayersVal');
@@ -286,50 +291,70 @@
                 maxLayersValSpan.textContent = '—';
                 maxLayerHint.textContent = '';
                 balanceInput.placeholder = '';
-                shortArea.style.display = 'none';
                 layerInput.placeholder = '';
+                shortArea.style.display = 'none';
 
                 if (isNaN(yards) || yards <= 0) return;
-
-                const meters = yards / YARD_TO_METER;
-                const metersRounded = floorTo2(meters);
-                metersValSpan.textContent = metersRounded.toFixed(2);
+                
+                // ১) Yards/Meters সিলেক্ট অপশন পরিবর্তন করলেই সাথে সাথে হিসাব হবে
+                const rollMeters = calTypeSelect.value === 'm' ? yards : yards / YARD_TO_METER;
+                const rollMetersRounded = floorTo2(rollMeters);
+                metersValSpan.textContent = rollMetersRounded.toFixed(2);
 
                 if (isNaN(marker) || marker <= 0) return;
 
-                const maxLayers = Math.floor(metersRounded / marker);
+                const maxLayers = Math.floor(rollMetersRounded / marker);
                 maxLayersValSpan.textContent = maxLayers;
                 maxLayerHint.textContent = `max ${maxLayers}`;
-                layerInput.placeholder = maxLayers;
 
-                const effectiveLayer = isNaN(layer) ? maxLayers : Math.min(layer, maxLayers);
+                let calcLayer = layer;
+                let calcBalance = userBalance;
 
-                const autoBalance = metersRounded - (effectiveLayer * marker);
-                const autoBalanceRounded = floorTo2(autoBalance);
-
-                if (!isNaN(userBalance)) {
-                    balanceInput.placeholder = '';
-                } else {
-                    balanceInput.placeholder = autoBalanceRounded.toFixed(2);
-                    balanceInput.value = '';
+                // ২) ব্যালেন্স ইনপুট দিলে লেয়ার অটো বের করার লজিক
+                if (isNaN(layer) && !isNaN(userBalance)) {
+                    calcLayer = Math.floor((rollMetersRounded - userBalance) / marker);
+                    if (calcLayer < 0) calcLayer = 0;
+                    layerInput.placeholder = calcLayer;
+                } else if (!isNaN(layer) && isNaN(userBalance)) {
+                    const autoBalance = rollMetersRounded - (layer * marker);
+                    balanceInput.placeholder = floorTo2(autoBalance).toFixed(2);
+                    calcBalance = floorTo2(autoBalance);
+                } else if (isNaN(layer) && isNaN(userBalance)) {
+                    layerInput.placeholder = maxLayers;
+                    const autoBalance = rollMetersRounded - (maxLayers * marker);
+                    balanceInput.placeholder = floorTo2(autoBalance).toFixed(2);
+                    calcLayer = maxLayers;
+                    calcBalance = floorTo2(autoBalance);
                 }
 
-                if (!isNaN(layer)) {
-                    const balanceForCalc = !isNaN(userBalance) ? userBalance : autoBalanceRounded;
-                    const totalUsed = effectiveLayer * marker + balanceForCalc;
-                    const difference = totalUsed - metersRounded;
+                // ৩) আপনার ফর্মুলা অনুযায়ী Short এবং Extra বের করার লজিক
+                // (fabric length * layer + balance) - roll quantity
+                if (!isNaN(userBalance) || !isNaN(layer)) {
+                    const finalLayer = isNaN(layer) ? calcLayer : layer;
+                    const finalBalance = isNaN(userBalance) ? calcBalance : userBalance;
+
+                    const difference = (marker * finalLayer) + finalBalance - rollMetersRounded;
+
                     if (difference < -0.001) {
+                        // মাইনাস (-) আসলে Short (কমলা/লালচে রঙ)
                         shortValueSpan.textContent = `Short: ${floorTo2(Math.abs(difference)).toFixed(2)} m`;
+                        shortValueSpan.style.background = '#ffeedb';
+                        shortValueSpan.style.color = '#b45f2a';
+                        shortArea.style.display = 'block';
+                    } else if (difference > 0.001) {
+                        // প্লাস (+) আসলে Extra (সবুজ রঙ)
+                        shortValueSpan.textContent = `Extra: ${floorTo2(difference).toFixed(2)} m`;
+                        shortValueSpan.style.background = '#e2f3ed';
+                        shortValueSpan.style.color = '#115e48';
                         shortArea.style.display = 'block';
                     } else {
                         shortArea.style.display = 'none';
                     }
-                } else {
-                    shortArea.style.display = 'none';
                 }
             }
 
-            [markerInput, yardsInput, layerInput, balanceInput].forEach(inp => {
+            // ড্রপডাউনসহ সব ইনপুটের ইভেন্ট লিসেনার একসাথে যুক্ত করা হলো
+            [markerInput, yardsInput, layerInput, balanceInput, calTypeSelect].forEach(inp => {
                 inp.addEventListener('input', calculate);
                 inp.addEventListener('change', calculate);
             });
