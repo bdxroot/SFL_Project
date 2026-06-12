@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Cutting & OC Planning Tool | Sewtech</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,7 +35,7 @@
             flex-direction: column;
         }
 
-        /* --- Header / Navbar --- */
+        /* --- Header / Navbar (fixed layout: brand left, buttons group right) --- */
         header {
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(10px);
@@ -46,9 +46,11 @@
             box-shadow: var(--shadow-sm);
             z-index: 10;
             border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
-        /* --- নতুন টাইপিং ও গায়েব হওয়ার অ্যানিমেশন CSS --- */
+        /* brand + typewriter */
         .brand-container {
             display: inline-flex;
             align-items: center;
@@ -64,60 +66,77 @@
             white-space: nowrap;
             overflow: hidden;
             display: inline-block;
-            border-right: 3px solid var(--primary-green); /* টাইপিং কার্সার */
+            border-right: 3px solid var(--primary-green);
             animation: 
                 typeAndErase 12s steps(40) infinite,
                 blinkCursor 0.75s step-end infinite;
         }
 
-        /* টাইপিং এবং এক একটি শব্দ উল্টো করে কাটার কিফ্রেম */
+        /* typing + partial erasing animation (glitch effect) */
         @keyframes typeAndErase {
-            0% { width: 0; }                        /* একদম শুরুতে খালি */
-            15%, 30% { width: 100%; }               /* পুরো লেখা "Sewtech Fashion Limited" টাইপ হবে */
-            38%, 48% { width: 16ch; }               /* "Limited" গায়েব হবে, থাকবে "Sewtech Fashion " */
-            56%, 66% { width: 8ch; }                /* "Fashion" গায়েব হবে, থাকবে "Sewtech " */
-            74%, 88% { width: 0; }                  /* "Sewtech" গায়েব হয়ে আবার শূন্য হবে */
-            100% { width: 0; }                      /* লুপ রিসেট */
+            0% { width: 0; }
+            15%, 30% { width: 100%; }
+            38%, 48% { width: 16ch; }
+            56%, 66% { width: 8ch; }
+            74%, 88% { width: 0; }
+            100% { width: 0; }
         }
 
-        /* কার্সার ব্লিংকিং ইফেক্ট */
         @keyframes blinkCursor {
             from, to { border-color: transparent }
             50% { border-color: var(--primary-green); }
         }
 
-        .about-btn {
+        /* --- BUTTON GROUP (Home + About moved together at right side) --- */
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* unified button style - Home button now matches About button perfectly */
+        .home-btn, .about-btn {
             background: var(--primary-green);
             color: white;
             border: none;
-            padding: 8px 18px;
+            padding: 8px 20px;
             border-radius: 40px;
             cursor: pointer;
             font-weight: 600;
             font-size: 0.85rem;
             transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .about-btn:hover {
+        .home-btn:hover, .about-btn:hover {
             background: var(--accent-green);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
-        /* --- Main Layout --- */
+        .home-btn:active, .about-btn:active {
+            transform: translateY(0);
+        }
+
+        /* --- Main Grid Layout --- */
         .container {
             display: grid;
-            grid-template-columns: 340px 1fr; 
+            grid-template-columns: 340px 1fr;
             flex: 1;
             padding: 1.5rem;
             gap: 1.5rem;
             max-width: 1600px;
             width: 100%;
             margin: 0 auto;
-            height: calc(100vh - 70px); 
+            height: calc(100vh - 70px);
             overflow: hidden;
         }
 
-        /* --- Sidebar (Style List) --- */
+        /* Sidebar Styling */
         .sidebar {
             background: var(--white);
             border-radius: 20px;
@@ -158,7 +177,7 @@
             padding: 0.4rem;
         }
 
-        /* স্ক্রোলবার স্টাইল */
+        /* scrollbar */
         .style-list::-webkit-scrollbar, 
         .main-content::-webkit-scrollbar {
             width: 6px;
@@ -196,7 +215,7 @@
             box-shadow: inset 4px 0 0 var(--primary-green);
         }
 
-        /* --- Main Content Area --- */
+        /* Main content */
         .main-content {
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(5px);
@@ -242,7 +261,6 @@
             font-family: monospace;
         }
 
-        /* --- BOM Table --- */
         .table-card {
             background: var(--white);
             border-radius: 16px;
@@ -271,7 +289,7 @@
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            min-width: 500px; 
+            min-width: 500px;
         }
 
         th {
@@ -318,7 +336,7 @@
             font-size: 0.85rem;
         }
 
-        /* --- Modal --- */
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -326,7 +344,7 @@
             background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(4px);
             justify-content: center; align-items: center;
-            z-index: 1000;
+            z-index: 1000; 
             padding: 20px;
         }
         
@@ -351,6 +369,7 @@
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* Responsive fix: stacked layout for mobile */
         @media (max-width: 850px) {
             body {
                 overflow: auto; 
@@ -367,15 +386,24 @@
             .main-content {
                 padding: 1rem;
                 backdrop-filter: none;
-                background: transparent;
-                box-shadow: none;
-                border: none;
+                background: rgba(255,255,255,0.8);
+                box-shadow: var(--shadow-sm);
+                border: 1px solid var(--border-light);
             }
             header {
                 padding: 0.8rem 1rem;
+                flex-direction: row;
+                flex-wrap: wrap;
             }
             .brand-text {
                 font-size: 1.2rem;
+            }
+            .nav-buttons {
+                gap: 8px;
+            }
+            .home-btn, .about-btn {
+                padding: 6px 14px;
+                font-size: 0.75rem;
             }
         }
     </style>
@@ -383,43 +411,61 @@
 <body>
 
 <header>
-    <!-- নতুন টাইপিং এবং ডিলে ইরেজিং কন্টেইনার -->
+    <!-- brand left side -->
     <div class="brand-container">
         <div class="brand-text">Sewtech Fashion Limited</div>
     </div>
-    <button class="about-btn" id="aboutBtn">👤 About Me</button>
+    <!-- RIGHT side: Both Home + About buttons grouped together (FIXED position) -->
+    <div class="nav-buttons">
+        <button id="home-btn" class="home-btn">🏠 Home</button>
+        <button class="about-btn" id="aboutBtn">👤 About Me</button>
+    </div>
 </header>
 
 <div class="container">
     <aside class="sidebar">
         <div class="search-container">
-            <input type="text" id="styleSearch" class="search-input" placeholder="Search Style (e.g. 1247)..." autocomplete="off">
+            <input type="text" id="styleSearch" class="search-input" placeholder="🔍 Search Style (e.g. 1247, 3951)..." autocomplete="off">
         </div>
         <div class="style-list" id="styleList"></div>
     </aside>
 
     <main class="main-content" id="mainContent">
+        <!-- welcome screen will be injected dynamically but fallback shown initially -->
         <div style="text-align: center; margin: 80px 0; color: #7b9e94;">
-            <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 8px;">Welcome to Cutting Dept Tool</h2>
-            <p style="font-weight: 500; font-size: 0.95rem;">Please select a Style Code from the directory to see component details.</p>
+            <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 8px;">✂️ Cutting Dept Planning Tool</h2>
+            <p style="font-weight: 500; font-size: 0.95rem;">Please select a Style Code from the directory to see component & BOM details.</p> 
+            <p><br><br>
+                <span id="unentry-data" style="color: #d32f2f; font-weight: bold; border-left: 4px solid #ff6b00; padding-left: 10px; background: rgba(255,235,220,0.5); display: inline-block; padding: 8px 12px; border-radius: 12px;">
+                    ⚠️ * Note : This item is not registered in Trackwel.
+                </span>
+                <span style="display: block; margin-top: 24px;">
+                    <br>
+                    <li style="text-decoration: underline wavy #b5651e; color: #2c3e50; list-style: none;">🧷 Fusing Items</li>
+                    <li style="text-decoration: underline wavy #b5651e; color: #2c3e50; list-style: none;">🧵 Quilding</li>
+                    <li style="text-decoration: underline wavy #b5651e; color: #2c3e50; list-style: none;">⚙️ TryCode</li>
+                </span>
+            </p>
         </div>
     </main>
 </div>
 
+<!-- About Modal -->
 <div class="modal" id="aboutModal">
     <div class="modal-content">
-        <h3 style="color: var(--primary-green)">User Profile</h3>
+        <h3 style="color: var(--primary-green)">👨‍💻 User Profile</h3>
         <hr style="margin-bottom: 12px; border: 0; border-top: 1px solid #eee;">
         <p><strong>Name:</strong> Omar Faruk</p>
         <p><strong>ID:</strong> 60849422</p>
-        <p><strong>Dept:</strong> Cutting</p>
-        <button class="about-btn" style="margin-top: 15px; width: 100%; border-radius: 10px; padding: 10px;" onclick="closeModal()">Close</button>
+        <p><strong>Dept:</strong> Cutting & IE</p>
+        <button class="about-btn" style="margin-top: 15px; width: 100%; border-radius: 10px; padding: 10px; background: var(--primary-green);" onclick="closeModal()">Close</button>
     </div>
 </div>
 
 <script>
-    const styleData = [
-        { style: "1247", oc: ["758", "818", "818.2", ""] },
+    // ---------- STYLES & BOM DATABASE ----------
+    const styleData = [ 
+        { style: "1247", oc: ["758", "818", "818.2", ""] }, 
         { style: "2385", oc: ["650", "717", "756", ""] },
         { style: "3951", oc: ["657", "693", "738", "783.1"] },
         { style: "2950", oc: ["628", "", "", ""] },
@@ -481,10 +527,14 @@
         ]
     };
 
+    // DOM elements
     const styleListEl = document.getElementById('styleList');
     const mainContentEl = document.getElementById('mainContent');
     const styleSearchInput = document.getElementById('styleSearch');
+    const homeButton = document.getElementById('home-btn');
+    const modal = document.getElementById('aboutModal');
 
+    // ---------- RENDER STYLES (with filter) ----------
     function renderStyles(filter = "") {
         styleListEl.innerHTML = "";
         const filtered = styleData.filter(s => s.style.toLowerCase().includes(filter.toLowerCase()));
@@ -492,13 +542,24 @@
         filtered.forEach(item => {
             const div = document.createElement('div');
             div.className = 'style-item';
-            div.innerHTML = `<span>Style: <b>${item.style}</b></span> <span>▶</span>`;
+            div.innerHTML = `<span><b>${item.style}</b></span> <span style="opacity:0.6;">📄</span>`;
             div.onclick = () => loadStyleDetails(item.style);
             styleListEl.appendChild(div);
         });
+
+        if (filtered.length === 0) {
+            const emptyMsg = document.createElement('div');
+            emptyMsg.className = 'style-item';
+            emptyMsg.style.justifyContent = 'center';
+            emptyMsg.style.opacity = '0.6';
+            emptyMsg.innerHTML = `<span>⚠️ No matching style</span>`;
+            styleListEl.appendChild(emptyMsg);
+        }
     }
 
+    // ---------- LOAD STYLE DETAILS (BOM + OC) ----------
     function loadStyleDetails(styleCode) {
+        // highlight active style
         document.querySelectorAll('.style-item').forEach(el => el.classList.remove('active'));
         const activeItem = [...document.querySelectorAll('.style-item')].find(el => el.innerText.includes(styleCode));
         if(activeItem) activeItem.classList.add('active');
@@ -506,57 +567,111 @@
         const styleObj = styleData.find(s => s.style === styleCode);
         const components = bomData[styleCode] || [];
 
-        let ocBadges = styleObj.oc.filter(o => o.trim() !== "").map(o => `<span class="oc-badge">OC: ${o}</span>`).join("");
-        if(!ocBadges) ocBadges = `<span class="empty-badge">No OC registered</span>`;
+        let ocBadges = styleObj.oc.filter(o => o.trim() !== "").map(o => `<span class="oc-badge">🎯 OC: ${o}</span>`).join("");
+        if(!ocBadges) ocBadges = `<span class="empty-badge">📌 No OC registered</span>`;
 
-        let tableRows = components.map(c => `
-            <tr>
-                <td style="font-weight: 600; color: #1e3b33;">${c.component}</td>
-                <td>${c.pdm ? `<span class="pdm-badge">${c.pdm}</span>` : `<span class="empty-badge">N/A</span>`}</td>
-                <td>${c.tw ? `<span class="tw-badge">${c.tw}</span>` : `<span class="empty-badge">N/A</span>`}</td>
-            </tr>
-        `).join("");
-
-        if(components.length === 0) {
-            tableRows = `<tr><td colspan="3" style="text-align:center; color:#999; padding:25px; font-style: italic;">No BOM Component Data found for this style.</td></tr>`;
+        let tableRows = "";
+        if(components.length > 0) {
+            tableRows = components.map(c => `
+                <tr>
+                    <td style="font-weight: 600; color: #1e3b33;">${c.component}</td>
+                    <td>${c.pdm ? `<span class="pdm-badge">📦 ${c.pdm}</span>` : `<span class="empty-badge">—</span>`}</td>
+                    <td>${c.tw ? `<span class="tw-badge">🔗 ${c.tw}</span>` : `<span class="empty-badge">—</span>`}</td>
+                </tr>
+            `).join("");
+        } else {
+            tableRows = `<tr><td colspan="3" style="text-align:center; color:#999; padding:25px; font-style: italic;">📭 No BOM Component Data found for this style.</td></tr>`;
         }
 
         mainContentEl.innerHTML = `
             <div class="style-header-card">
-                <h2 style="color: var(--primary-green)">Style Code: ${styleCode}</h2>
+                <h2 style="color: var(--primary-green)">🧾 Style Code: ${styleCode}</h2>
                 <div class="oc-row">${ocBadges}</div>
             </div>
-
             <div class="table-card">
-                <h3>Fabric & Component BOM</h3>
+                <h3>📋 Fabric & Component BOM (PDM / Trackwel)</h3>
                 <div class="table-wrapper">
                     <table>
                         <thead>
-                            <tr>
-                                <th>Component Name</th>
-                                <th>PDM Code</th>
-                                <th>Trackwel Code</th>
-                            </tr>
+                            <tr><th>Component Name</th><th>PDM Code</th><th>Trackwel Code</th></tr>
                         </thead>
                         <tbody>${tableRows}</tbody>
                     </table>
                 </div>
+                <div style="font-size: 0.7rem; margin-top: 12px; text-align: right; color: #7e9e94;">🔄 Cutting planning reference</div>
             </div>
         `;
-
+        
+        // smooth scroll on mobile
         if (window.innerWidth <= 850) {
-            mainContentEl.scrollIntoView({ behavior: 'smooth' });
+            mainContentEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
 
+    // ---------- RESET TO HOME SCREEN (without page reload, fixes home button behavior) ----------
+    function resetToHomeScreen() {
+        // 1. Clear search input
+        if (styleSearchInput) styleSearchInput.value = '';
+        
+        // 2. Re-render full style list (without filter)
+        renderStyles('');
+        
+        // 3. Remove any active highlight from style items
+        document.querySelectorAll('.style-item').forEach(el => el.classList.remove('active'));
+        
+        // 4. Restore Welcome Screen with original message + styling + notes
+        mainContentEl.innerHTML = `
+            <div style="text-align: center; margin: 40px 0; color: #5b887d;">
+                <div style="background: rgba(255,255,240,0.7); border-radius: 32px; padding: 24px 16px; backdrop-filter: blur(4px);">
+                    <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 12px; color: #0a5e46;">✂️ Cutting Dept Toolkit</h2>
+                    <p style="font-weight: 500; font-size: 1rem; max-width: 480px; margin: 0 auto;">📌 Select a Style Code from left panel to view OC details & material BOM with PDM/Trackwel codes.</p> 
+                    <div style="margin-top: 32px; background: #effaf5; border-radius: 20px; padding: 16px; display: inline-block;">
+                        <span style="color: #c0392b; font-weight: bold; background: #fff0e7; padding: 8px 16px; border-radius: 60px; display: inline-block;">
+                            ⚠️ * Note : This item is not registered in Trackwel.
+                        </span>
+                        <div style="margin-top: 20px; text-align: left; display: inline-block;">
+                            <li style="text-decoration: underline wavy #e67e22; color: #2c3e50; list-style: none; margin: 8px 0;">🧷 Fusing Items (manual check)</li>
+                            <li style="text-decoration: underline wavy #e67e22; color: #2c3e50; list-style: none; margin: 8px 0;">🧵 Quilding / Interlining</li>
+                            <li style="text-decoration: underline wavy #e67e22; color: #2c3e50; list-style: none; margin: 8px 0;">⚙️ TryCode / Sample Tracking</li>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // ---------- EVENT HANDLERS ----------
+    // Home button: resets everything, moves UI to initial state (FIXED: no page reload, smooth)
+    if (homeButton) {
+        // remove any inline onclick to avoid conflict, attach new listener
+        homeButton.onclick = (e) => {
+            e.preventDefault();
+            resetToHomeScreen();
+        };
+    }
+
+    // Search filter
     styleSearchInput.oninput = (e) => renderStyles(e.target.value);
 
-    const modal = document.getElementById('aboutModal');
-    document.getElementById('aboutBtn').onclick = () => modal.style.display = 'flex';
-    function closeModal() { modal.style.display = 'none'; }
-    window.onclick = (e) => { if(e.target === modal) closeModal(); }
+    // About Modal Logic
+    const aboutBtn = document.getElementById('aboutBtn');
+    function closeModal() { 
+        if(modal) modal.style.display = 'none'; 
+    }
+    if(aboutBtn) {
+        aboutBtn.onclick = () => {
+            if(modal) modal.style.display = 'flex';
+        };
+    }
+    window.onclick = (e) => { if(e.target === modal) closeModal(); };
 
+    // Initial render
     renderStyles();
+    
+    // extra: if any unknown click on welcome, also ensure proper style
+    // Ensure default home state if needed but we keep as is.
+    // Optional: fix any accidental scroll or active class ghosts after reset.
+    // added double safety: when resetting, no memory of previous style.
 </script>
 </body>
 </html>
