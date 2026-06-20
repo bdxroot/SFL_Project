@@ -35,7 +35,6 @@
             flex-direction: column;
         }
 
-        /* --- Header / Navbar (fixed layout: brand left, buttons group right) --- */
         header {
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(10px);
@@ -50,7 +49,6 @@
             gap: 12px;
         }
 
-        /* brand + typewriter */
         .brand-container {
             display: inline-flex;
             align-items: center;
@@ -72,7 +70,6 @@
                 blinkCursor 0.75s step-end infinite;
         }
 
-        /* typing + partial erasing animation (glitch effect) */
         @keyframes typeAndErase {
             0% { width: 0; }
             15%, 30% { width: 100%; }
@@ -87,14 +84,12 @@
             50% { border-color: var(--primary-green); }
         }
 
-        /* --- BUTTON GROUP (Home + About moved together at right side) --- */
         .nav-buttons {
             display: flex;
             gap: 12px;
             align-items: center;
         }
 
-        /* unified button style - Home button now matches About button perfectly */
         .home-btn, .about-btn {
             background: var(--primary-green);
             color: white;
@@ -122,7 +117,6 @@
             transform: translateY(0);
         }
 
-        /* --- Main Grid Layout --- */
         .container {
             display: grid;
             grid-template-columns: 340px 1fr;
@@ -136,7 +130,6 @@
             overflow: hidden;
         }
 
-        /* Sidebar Styling */
         .sidebar {
             background: var(--white);
             border-radius: 20px;
@@ -177,7 +170,6 @@
             padding: 0.4rem;
         }
 
-        /* scrollbar */
         .style-list::-webkit-scrollbar, 
         .main-content::-webkit-scrollbar {
             width: 6px;
@@ -215,7 +207,6 @@
             box-shadow: inset 4px 0 0 var(--primary-green);
         }
 
-        /* Main content */
         .main-content {
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(5px);
@@ -250,6 +241,7 @@
             flex-wrap: wrap;
         }
 
+        /* OC Badge Styling for link support */
         .oc-badge {
             background: #e2f5ee;
             padding: 5px 14px;
@@ -259,6 +251,21 @@
             color: var(--primary-green);
             border: 1px solid #bcead9;
             font-family: monospace;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+        }
+
+        /* Hover effect will only work if it's an anchor tag with a valid link */
+        a.oc-badge {
+            cursor: pointer;
+        }
+        
+        a.oc-badge:hover {
+            background: var(--primary-green);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(10, 94, 70, 0.15);
         }
 
         .table-card {
@@ -336,7 +343,6 @@
             font-size: 0.85rem;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -367,55 +373,38 @@
             border-radius: 8px;
         }
 
+        footer {
+            text-align: center;
+            padding: 1.2rem;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-top: 1px dashed var(--border-light);
+            font-size: 0.75rem;
+            color: #5b887d;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Responsive fix: stacked layout for mobile */
         @media (max-width: 850px) {
-            body {
-                overflow: auto; 
-            }
-            .container {
-                grid-template-columns: 1fr;
-                height: auto; 
-                padding: 1rem;
-                gap: 1rem;
-            }
-            .sidebar {
-                max-height: 280px; 
-            }
-            .main-content {
-                padding: 1rem;
-                backdrop-filter: none;
-                background: rgba(255,255,255,0.8);
-                box-shadow: var(--shadow-sm);
-                border: 1px solid var(--border-light);
-            }
-            header {
-                padding: 0.8rem 1rem;
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-            .brand-text {
-                font-size: 1.2rem;
-            }
-            .nav-buttons {
-                gap: 8px;
-            }
-            .home-btn, .about-btn {
-                padding: 6px 14px;
-                font-size: 0.75rem;
-            }
+            body { overflow: auto; }
+            .container { grid-template-columns: 1fr; height: auto; padding: 1rem; gap: 1rem; }
+            .sidebar { max-height: 280px; }
+            .main-content { padding: 1rem; backdrop-filter: none; background: rgba(255,255,255,0.8); box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); }
+            header { padding: 0.8rem 1rem; flex-direction: row; flex-wrap: wrap; }
+            .brand-text { font-size: 1.2rem; }
+            .nav-buttons { gap: 8px; }
+            .home-btn, .about-btn { padding: 6px 14px; font-size: 0.75rem; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <!-- brand left side -->
     <div class="brand-container">
         <div class="brand-text">Sewtech Fashion Limited</div>
     </div>
-    <!-- RIGHT side: Both Home + About buttons grouped together (FIXED position) -->
     <div class="nav-buttons">
         <button id="home-btn" class="home-btn">🏠 Home</button>
         <button class="about-btn" id="aboutBtn">👤 About Me</button>
@@ -431,7 +420,6 @@
     </aside>
 
     <main class="main-content" id="mainContent">
-        <!-- welcome screen will be injected dynamically but fallback shown initially -->
         <div style="text-align: center; margin: 80px 0; color: #7b9e94;">
             <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 8px;">✂️ Cutting Dept Planning Tool</h2>
             <p style="font-weight: 500; font-size: 0.95rem;">Please select a Style Code from the directory to see component & BOM details.</p> 
@@ -450,7 +438,6 @@
     </main>
 </div>
 
-<!-- About Modal -->
 <div class="modal" id="aboutModal">
     <div class="modal-content">
         <h3 style="color: var(--primary-green)">👨‍💻 User Profile</h3>
@@ -464,37 +451,38 @@
 
 <script>
     // ---------- STYLES & BOM DATABASE ----------
+    // Link na thakle faka ("") rakhben, system automatic normal static badge banyie nibe.
     const styleData = [ 
-        { style: "1247", oc: ["758", "818", "818.2", ""] }, 
-        { style: "2385", oc: ["650", "717", "756", ""] },
-        { style: "3951", oc: ["657", "693", "738", "783.1","783.2"] },
-        { style: "2950", oc: ["628", "", "", ""] },
-        { style: "6316", oc: ["625", "", "", ""] },
-        { style: "2953", oc: ["629", "", "", ""] },
-        { style: "8515", oc: ["626", "", "", ""] },
-        { style: "6357", oc: ["627", "", "", ""] },
-        { style: "H448", oc: ["747", "", "", ""] },
-        { style: "P448", oc: ["746", "", "", ""] },
-        { style: "P443", oc: ["743", "", "", ""] },
-        { style: "2020", oc: ["686", "", "", ""] },
-        { style: "3100", oc: ["887", "", "", ""] },
-        { style: "3099", oc: ["885", "", "", ""] },
-        { style: "3097", oc: ["883", "", "", ""] },
-        { style: "3098", oc: ["884", "", "", ""] },
-        { style: "3101", oc: ["886", "", "", ""] },
-        { style: "H438", oc: ["744", "", "", ""] },
-        { style: "H534", oc: ["745", "", "", ""] },
-        { style: "0163", oc: ["648", "691", "771", ""] },
-        { style: "P534", oc: ["748", "745", "", ""] },
-        { style: "439", oc: ["628", "", "", ""] },
-        { style: "3584", oc: ["755", "815.1", "815.2", ""] },
-        { style: "1X305", oc: ["176", "", "", ""] },
-        { style: "H557", oc: ["793", "", "", ""] },
-        { style: "H573", oc: ["874", "", "", ""] },
-        { style: "H535", oc: ["873", "", "", ""] },
-        { style: "H580", oc: ["875", "", "", ""] },
-        { style: "H555", oc: ["876", "", "", ""] },
-        { style: "7082", oc: ["881", "", "", ""] }
+        { style: "1247", oc: [{ code: "758", link: "https://sewtech1.trakwel.com/cutting/cut-plan/176" }, { code: "818", link: "https://sewtech1.trakwel.com/cutting/cut-plan/221" }, { code: "818.2", link: "https://sewtech1.trakwel.com/cutting/cut-plan/302" }] }, 
+        { style: "2385", oc: [{ code: "650", link: "https://sewtech1.trakwel.com/cutting/cut-plan/209" }, { code: "717", link: "https://sewtech1.trakwel.com/cutting/cut-plan/247" }, { code: "756", link: "https://sewtech1.trakwel.com/cutting/cut-plan/289" }] },
+        { style: "3951", oc: [{ code: "657", link: "https://sewtech1.trakwel.com/cutting/cut-plan/200" }, { code: "693", link: "https://sewtech1.trakwel.com/cutting/cut-plan/231" }, { code: "738", link: "https://sewtech1.trakwel.com/cutting/cut-plan/284" }, { code: "783.1", link: "https://sewtech1.trakwel.com/cutting/cut-plan/312" }, { code: "783.2", link: "https://sewtech1.trakwel.com/cutting/cut-plan/348" }] },
+        { style: "2950", oc: [{ code: "628", link: "https://sewtech1.trakwel.com/cutting/cut-plan/208" }] },
+        { style: "6316", oc: [{ code: "625", link: "https://sewtech1.trakwel.com/cutting/cut-plan/214" }] },
+        { style: "2953", oc: [{ code: "629", link: "https://sewtech1.trakwel.com/cutting/cut-plan/234" }] },
+        { style: "8515", oc: [{ code: "626", link: "https://sewtech1.trakwel.com/cutting/cut-plan/213" }] },
+        { style: "6357", oc: [{ code: "627", link: "https://sewtech1.trakwel.com/cutting/cut-plan/257" }] },
+        { style: "H448", oc: [{ code: "747", link: "https://sewtech1.trakwel.com/cutting/cut-plan/320" }] },
+        { style: "P448", oc: [{ code: "746", link: "" }] },
+        { style: "P443", oc: [{ code: "743", link: "https://sewtech1.trakwel.com/cutting/cut-plan/291" }] },
+        { style: "2020", oc: [{ code: "686", link: "https://sewtech1.trakwel.com/cutting/cut-plan/329" }] },
+        { style: "3100", oc: [{ code: "887", link: "https://sewtech1.trakwel.com/cutting/cut-plan/316" }] },
+        { style: "3099", oc: [{ code: "885", link: "https://sewtech1.trakwel.com/cutting/cut-room-planner?search=885" }] },
+        { style: "3097", oc: [{ code: "883", link: "https://sewtech1.trakwel.com/cutting/cut-plan/301" }] },
+        { style: "3098", oc: [{ code: "884", link: "https://sewtech1.trakwel.com/cutting/cut-plan/314" }] },
+        { style: "3101", oc: [{ code: "886", link: "https://sewtech1.trakwel.com/cutting/cut-plan/313" }] },
+        { style: "H438", oc: [{ code: "744", link: "" }] },
+        { style: "H534", oc: [{ code: "745", link: "https://sewtech1.trakwel.com/cutting/cut-plan/246" }] },
+        { style: "0163", oc: [{ code: "648", link: "https://sewtech1.trakwel.com/cutting/cut-plan/203" }, { code: "691", link: "https://sewtech1.trakwel.com/cutting/cut-plan/264" }, { code: "771", link: "https://sewtech1.trakwel.com/cutting/cut-plan/282" }] },
+        { style: "P534", oc: [{ code: "748", link: "https://sewtech1.trakwel.com/cutting/cut-plan/245" }, { code: "745", link: "" }] },
+        { style: "439", oc: [{ code: "628", link: "" }] },
+        { style: "3584", oc: [{ code: "755", link: "https://sewtech1.trakwel.com/cutting/cut-plan/248" }, { code: "815.1", link: "https://sewtech1.trakwel.com/cutting/cut-plan/283" }, { code: "815.2", link: "https://sewtech1.trakwel.com/cutting/cut-plan/339" }] },
+        { style: "1X305", oc: [{ code: "176", link: "" }] },
+        { style: "H557", oc: [{ code: "793", link: "" }] },
+        { style: "H573", oc: [{ code: "874", link: "https://sewtech1.trakwel.com/cutting/cut-plan/331" }] },
+        { style: "H535", oc: [{ code: "873", link: "https://sewtech1.trakwel.com/cutting/cut-plan/350" }] },
+        { style: "H580", oc: [{ code: "875", link: "https://sewtech1.trakwel.com/cutting/cut-plan/330" }] },
+        { style: "H555", oc: [{ code: "876", link: "https://sewtech1.trakwel.com/cutting/cut-plan/337" }] },
+        { style: "7082", oc: [{ code: "881", link: "https://sewtech1.trakwel.com/cutting/cut-room-planner?search=881" }] }
     ];
 
     const bomData = {
@@ -528,14 +516,12 @@
         ]
     };
 
-    // DOM elements
     const styleListEl = document.getElementById('styleList');
     const mainContentEl = document.getElementById('mainContent');
     const styleSearchInput = document.getElementById('styleSearch');
     const homeButton = document.getElementById('home-btn');
     const modal = document.getElementById('aboutModal');
 
-    // ---------- RENDER STYLES (with filter) ----------
     function renderStyles(filter = "") {
         styleListEl.innerHTML = "";
         const filtered = styleData.filter(s => s.style.toLowerCase().includes(filter.toLowerCase()));
@@ -558,9 +544,8 @@
         }
     }
 
-    // ---------- LOAD STYLE DETAILS (BOM + OC) ----------
+    // ---------- LOAD STYLE DETAILS ----------
     function loadStyleDetails(styleCode) {
-        // highlight active style
         document.querySelectorAll('.style-item').forEach(el => el.classList.remove('active'));
         const activeItem = [...document.querySelectorAll('.style-item')].find(el => el.innerText.includes(styleCode));
         if(activeItem) activeItem.classList.add('active');
@@ -568,7 +553,15 @@
         const styleObj = styleData.find(s => s.style === styleCode);
         const components = bomData[styleCode] || [];
 
-        let ocBadges = styleObj.oc.filter(o => o.trim() !== "").map(o => `<span class="oc-badge">🎯 OC: ${o}</span>`).join("");
+        // Dynamic link checker and badge generation logic
+        let ocBadges = styleObj.oc.filter(o => o.code && o.code.trim() !== "").map(o => {
+            if (o.link && o.link.trim() !== "") {
+                return `<a href="${o.link}" target="_blank" class="oc-badge">🎯 OC: ${o.code}</a>`;
+            } else {
+                return `<span class="oc-badge">🎯 OC: ${o.code}</span>`;
+            }
+        }).join("");
+        
         if(!ocBadges) ocBadges = `<span class="empty-badge">📌 No OC registered</span>`;
 
         let tableRows = "";
@@ -603,24 +596,16 @@
             </div>
         `;
         
-        // smooth scroll on mobile
         if (window.innerWidth <= 850) {
             mainContentEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
 
-    // ---------- RESET TO HOME SCREEN (without page reload, fixes home button behavior) ----------
     function resetToHomeScreen() {
-        // 1. Clear search input
         if (styleSearchInput) styleSearchInput.value = '';
-        
-        // 2. Re-render full style list (without filter)
         renderStyles('');
-        
-        // 3. Remove any active highlight from style items
         document.querySelectorAll('.style-item').forEach(el => el.classList.remove('active'));
         
-        // 4. Restore Welcome Screen with original message + styling + notes
         mainContentEl.innerHTML = `
             <div style="text-align: center; margin: 40px 0; color: #5b887d;">
                 <div style="background: rgba(255,255,240,0.7); border-radius: 32px; padding: 24px 16px; backdrop-filter: blur(4px);">
@@ -641,38 +626,29 @@
         `;
     }
 
-    // ---------- EVENT HANDLERS ----------
-    // Home button: resets everything, moves UI to initial state (FIXED: no page reload, smooth)
     if (homeButton) {
-        // remove any inline onclick to avoid conflict, attach new listener
         homeButton.onclick = (e) => {
             e.preventDefault();
             resetToHomeScreen();
         };
     }
 
-    // Search filter
     styleSearchInput.oninput = (e) => renderStyles(e.target.value);
 
-    // About Modal Logic
     const aboutBtn = document.getElementById('aboutBtn');
-    function closeModal() { 
-        if(modal) modal.style.display = 'none'; 
-    }
+    function closeModal() { if(modal) modal.style.display = 'none'; }
     if(aboutBtn) {
-        aboutBtn.onclick = () => {
-            if(modal) modal.style.display = 'flex';
-        };
+        aboutBtn.onclick = () => { if(modal) modal.style.display = 'flex'; };
     }
     window.onclick = (e) => { if(e.target === modal) closeModal(); };
 
-    // Initial render
     renderStyles();
-    
-    // extra: if any unknown click on welcome, also ensure proper style
-    // Ensure default home state if needed but we keep as is.
-    // Optional: fix any accidental scroll or active class ghosts after reset.
-    // added double safety: when resetting, no memory of previous style.
 </script>
+
+<footer>
+    Open Source Tool • Free to Use<br>
+    Dev: <strong>Omar Faruk</strong> • Sewtech Fashion Limited © 2024
+</footer>
+
 </body>
 </html>
