@@ -241,7 +241,6 @@
             flex-wrap: wrap;
         }
 
-        /* OC Badge Styling for link support */
         .oc-badge {
             background: #e2f5ee;
             padding: 5px 14px;
@@ -256,7 +255,6 @@
             transition: all 0.2s ease;
         }
 
-        /* Hover effect will only work if it's an anchor tag with a valid link */
         a.oc-badge {
             cursor: pointer;
         }
@@ -397,61 +395,133 @@
             .nav-buttons { gap: 8px; }
             .home-btn, .about-btn { padding: 6px 14px; font-size: 0.75rem; }
         }
+
+        .content-part-B {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .hash-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .hash-container label {
+            font-weight: 700;
+            color: var(--primary-green);
+            font-size: 1.1rem;
+        }
+
+        .hash-container input {
+            width: 100%;
+            padding: 14px 16px;
+            background: #1e1e1e;
+            color: #00ff88;
+            border: 1px solid #444;
+            border-radius: 8px;
+            outline: none;
+            font-size: 15px;
+            font-family: Consolas, monospace;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .hash-container input::placeholder {
+            color: #888;
+        }
+
+        .hash-container input:focus {
+            border-color: #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+
+        /* Live Timer Style */
+        .timer-display {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+            font-family: monospace;
+            background: #eaf6f2;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid #bcead9;
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="brand-container">
-        <div class="brand-text">Sewtech Fashion Limited</div>
-    </div>
-    <div class="nav-buttons">
-        <button id="home-btn" class="home-btn">🏠 Home</button>
-        <button class="about-btn" id="aboutBtn">👤 About Me</button>
-    </div>
-</header>
-
-<div class="container">
-    <aside class="sidebar">
-        <div class="search-container">
-            <input type="text" id="styleSearch" class="search-input" placeholder="🔍 Search Style (e.g. 1247, 3951)..." autocomplete="off">
+<div class="content-psrt-A" id="content-psrt-A" style="display: none;">
+    <header>
+        <div class="brand-container">
+            <div class="brand-text">Sewtech Fashion Limited</div>
         </div>
-        <div class="style-list" id="styleList"></div>
-    </aside>
-
-    <main class="main-content" id="mainContent">
-        <div style="text-align: center; margin: 80px 0; color: #7b9e94;">
-            <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 8px;">✂️ Cutting Dept Planning Tool</h2>
-            <p style="font-weight: 500; font-size: 0.95rem;">Please select a Style Code from the directory to see component & BOM details.</p> 
-            <p><br><br>
-                <span id="unentry-data" style="color: #d32f2f; font-weight: bold; border-left: 4px solid #ff6b00; padding-left: 10px; background: rgba(255,235,220,0.5); display: inline-block; padding: 8px 12px; border-radius: 12px;">
-                    ⚠️ * Note : This item is not registered in Trackwel.
-                </span>
-                <span style="display: block; margin-top: 24px;">
-                    <br>
-                    <li style="text-decoration: underline wavy #b5651e; color: #2c3e50; list-style: none;">🧷 Fusing Items</li>
-                    <li style="text-decoration: underline wavy #b5651e; color: #2c3e50; list-style: none;">🧵 Quilding</li>
-                    <li style="text-decoration: underline wavy #b5651e; color: #2c3e50; list-style: none;">⚙️ TryCode</li>
-                </span>
-            </p>
+        <div class="nav-buttons">
+            <span id="sessionTimer" class="timer-display">Remaining: 04:00:00</span>
+            <button id="home-btn" class="home-btn">🏠 Home</button>
+            <button class="about-btn" id="aboutBtn">👤 About Me</button>
         </div>
-    </main>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="search-container">
+                <input type="text" id="styleSearch" class="search-input" placeholder="🔍 Search Style (e.g. 1247, 3951)..." autocomplete="off">
+            </div>
+            <div class="style-list" id="styleList"></div>
+        </aside>
+
+        <main class="main-content" id="mainContent">
+            <div style="text-align: center; margin: 80px 0; color: #7b9e94;">
+                <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 8px;">✂️ Cutting Dept Planning Tool</h2>
+                <p style="font-weight: 500; font-size: 0.95rem;">Please select a Style Code from the directory to see component & BOM details.</p> 
+                <p><br><br>
+                    <span id="unentry-data" style="color: #d32f2f; font-weight: bold; border-left: 4px solid #ff6b00; padding-left: 10px; background: rgba(255,235,220,0.5); display: inline-block; padding: 8px 12px; border-radius: 12px;">
+                        ⚠️ * Note : This item is not registered in Trackwel.
+                    </span>
+                    <span style="display: block; margin-top: 24px;">
+                        <br>
+                        <li style="text-decoration: underline wavy #b5651e; color: #2c3e50; list-style: none;">🧷 Fusing Items</li>
+                        <li style="text-decoration: underline wavy #b5651e; color: #2c3e50; list-style: none;">🧵 Quilding</li>
+                        <li style="text-decoration: underline wavy #b5651e; color: #2c3e50; list-style: none;">⚙️ TryCode</li>
+                    </span>
+                </p>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal" id="aboutModal">
+        <div class="modal-content">
+            <h3 style="color: var(--primary-green)">👨‍💻 User Profile</h3>
+            <hr style="margin-bottom: 12px; border: 0; border-top: 1px solid #eee;">
+            <p><strong>Name:</strong> Omar Faruk</p>
+            <p><strong>ID:</strong> 60849422</p>
+            <p><strong>Dept:</strong> Cutting</p>
+            <button class="about-btn" style="margin-top: 15px; width: 100%; border-radius: 10px; padding: 10px; background: var(--primary-green);" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <footer>
+        Open Source Tool • Free to Use<br>
+        Dev: <strong>Omar Faruk</strong> • Sewtech Fashion Limited © 2024
+    </footer>
 </div>
 
-<div class="modal" id="aboutModal">
-    <div class="modal-content">
-        <h3 style="color: var(--primary-green)">👨‍💻 User Profile</h3>
-        <hr style="margin-bottom: 12px; border: 0; border-top: 1px solid #eee;">
-        <p><strong>Name:</strong> Omar Faruk</p>
-        <p><strong>ID:</strong> 60849422</p>
-        <p><strong>Dept:</strong> Cutting</p>
-        <button class="about-btn" style="margin-top: 15px; width: 100%; border-radius: 10px; padding: 10px; background: var(--primary-green);" onclick="closeModal()">Close</button>
+<div class="content-part-B" id="content-part-B">
+    <div class="hash-container">
+        <label for="hash">🔒 Hash Verification Required</label>
+        <input type="text" id="hash" placeholder="Enter full hash code here..." oninput="handle_part_B()">
     </div>
 </div>
 
 <script>
     // ---------- STYLES & BOM DATABASE ----------
-    // Link na thakle faka ("") rakhben, system automatic normal static badge banyie nibe.
     const styleData = [ 
         { style: "1247", oc: [{ code: "758", link: "https://sewtech1.trakwel.com/cutting/cut-plan/176" }, { code: "818", link: "https://sewtech1.trakwel.com/cutting/cut-plan/221" }, { code: "818.2", link: "https://sewtech1.trakwel.com/cutting/cut-plan/302" },  { code: "818.3", link: "https://sewtech1.trakwel.com/cutting/cut-plan/368" }] }, 
         { style: "2385", oc: [{ code: "650", link: "https://sewtech1.trakwel.com/cutting/cut-plan/209" }, { code: "717", link: "https://sewtech1.trakwel.com/cutting/cut-plan/247" }, { code: "756", link: "https://sewtech1.trakwel.com/cutting/cut-plan/289" }] },
@@ -485,8 +555,7 @@
         { style: "7082", oc: [{ code: "881", link: "https://sewtech1.trakwel.com/cutting/cut-room-planner?search=881" }] },
         { style: "X-2859", oc: [{ code: "801.3", link: "https://sewtech1.trakwel.com/cutting/cut-plan/374" }] },
         { style: "X-5658", oc: [{ code: "817.3", link: "https://sewtech1.trakwel.com/cutting/cut-plan/383" }] },
-		{ style: "X-6631", oc: [{ code: "802.2", link: "https://sewtech1.trakwel.com/cutting/cut-plan/381" }] }
-        
+        { style: "X-6631", oc: [{ code: "802.2", link: "https://sewtech1.trakwel.com/cutting/cut-plan/381" }] }
     ];
 
     const bomData = {
@@ -548,7 +617,6 @@
         }
     }
 
-    // ---------- LOAD STYLE DETAILS ----------
     function loadStyleDetails(styleCode) {
         document.querySelectorAll('.style-item').forEach(el => el.classList.remove('active'));
         const activeItem = [...document.querySelectorAll('.style-item')].find(el => el.innerText.includes(styleCode));
@@ -557,7 +625,6 @@
         const styleObj = styleData.find(s => s.style === styleCode);
         const components = bomData[styleCode] || [];
 
-        // Dynamic link checker and badge generation logic
         let ocBadges = styleObj.oc.filter(o => o.code && o.code.trim() !== "").map(o => {
             if (o.link && o.link.trim() !== "") {
                 return `<a href="${o.link}" target="_blank" class="oc-badge">🎯 OC: ${o.code}</a>`;
@@ -647,12 +714,92 @@
     window.onclick = (e) => { if(e.target === modal) closeModal(); };
 
     renderStyles();
-</script>
 
-<footer>
-    Open Source Tool • Free to Use<br>
-    Dev: <strong>Omar Faruk</strong> • Sewtech Fashion Limited © 2024
-</footer>
+    // ---------- NEW AUTOMATIC HASH & TIMER SYSTEM (4 HOURS) ----------
+    let timerInterval = null;
+
+    function handle_part_B() {
+        const data = "81dc9";
+        const hash = "bdb";
+        const password = "52d04dc20036dbd8313ed055";
+        const allHash = data + hash + password; // 81dc9bdb52d04dc20036dbd8313ed055
+
+        const hashInput = document.getElementById('hash');
+        if (hashInput) {
+            const userHash = hashInput.value.trim();
+            if (userHash === allHash) {
+                // বর্তমান সময় এবং ৪ ঘণ্টা পরের এক্সপায়ারি টাইম মিলিগ্রামে সেভ করা হচ্ছে
+                const now = new Date().getTime();
+                const expiryTime = now + (4 * 60 * 60 * 1000); // ৪ ঘণ্টা মিলি-সেকেন্ডে
+
+                localStorage.setItem('hash_verified', 'true');
+                localStorage.setItem('hash_expiry', expiryTime.toString());
+
+                activateApp();
+            }
+        }
+    }
+
+    function activateApp() {
+        document.getElementById('content-psrt-A').style.display = 'block';
+        document.getElementById('content-part-B').style.display = 'none';
+        startTimer();
+    }
+
+    function deactivateApp() {
+        document.getElementById('content-psrt-A').style.display = 'none';
+        document.getElementById('content-part-B').style.display = 'flex';
+        document.getElementById('hash').value = '';
+        localStorage.removeItem('hash_verified');
+        localStorage.removeItem('hash_expiry');
+        if (timerInterval) clearInterval(timerInterval);
+    }
+
+    function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+
+        const expiryTime = parseInt(localStorage.getItem('hash_expiry') || '0');
+        const timerDisplay = document.getElementById('sessionTimer');
+
+        timerInterval = setInterval(() => {
+            const now = new Date().getTime();
+            const timeLeft = expiryTime - now;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                deactivateApp();
+            } else {
+                // ঘণ্টা, মিনিট এবং সেকেন্ড হিসাব করা
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                // সুন্দর ফরম্যাট (যেমন: 03:45:12) তৈরি করা
+                const formattedTime = 
+                    String(hours).padStart(2, '0') + ":" + 
+                    String(minutes).padStart(2, '0') + ":" + 
+                    String(seconds).padStart(2, '0');
+
+                if (timerDisplay) {
+                    timerDisplay.innerText = "⏳ Remaining: " + formattedTime;
+                }
+            }
+        }, 1000);
+    }
+
+    // পেজ লোড বা রিফ্রেশ হওয়ার সাথে সাথেই সেশন চেক করার লজিক
+    window.onload = function() {
+        const isVerified = localStorage.getItem('hash_verified');
+        const expiryTime = parseInt(localStorage.getItem('hash_expiry') || '0');
+        const now = new Date().getTime();
+
+        if (isVerified === 'true' && expiryTime > now) {
+            activateApp();
+        } else {
+            deactivateApp();
+        }
+    };
+</script>
 
 </body>
 </html>
