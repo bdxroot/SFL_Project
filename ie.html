@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data → IE 转换器（自动识别团队名称）</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #f4f7fc;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            max-width: 1400px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 20px 60px rgba(0, 20, 40, 0.12);
+            padding: 30px 32px 40px;
+            transition: all 0.2s;
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 600;
+            color: #0b2b4a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+
+        h1 small {
+            font-weight: 400;
+            font-size: 15px;
+            color: #5e7a99;
+            margin-left: 8px;
+        }
+
+        .subtitle {
+            color: #3f5e7a;
+            font-size: 14px;
+            border-left: 4px solid #2a7de1;
+            padding-left: 16px;
+            margin-bottom: 28px;
+            background: #f0f6ff;
+            border-radius: 0 10px 10px 0;
+            line-height: 1.6;
+            padding: 10px 18px;
+        }
+
+        .subtitle strong {
+            color: #0b2b4a;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 860px) {
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+            .app {
+                padding: 20px 16px;
+            }
+        }
+
+        .card {
+            background: #f9faff;
+            border-radius: 18px;
+            border: 1px solid #e6edf4;
+            padding: 18px 20px 22px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .card h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1c3b5c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card h3 .badge {
+            background: #dce6f2;
+            font-size: 11px;
+            font-weight: 500;
+            padding: 0 10px;
+            border-radius: 30px;
+            color: #1f4973;
+            line-height: 22px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #234a6b;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid #d6e1ed;
+            border-radius: 12px;
+            font-size: 14px;
+            background: white;
+            transition: 0.2s;
+            font-family: 'Segoe UI', monospace;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: #2a7de1;
+            box-shadow: 0 0 0 3px rgba(42, 125, 225, 0.15);
+            outline: none;
+        }
+
+        textarea {
+            min-height: 200px;
+            resize: vertical;
+            font-size: 13px;
+            line-height: 1.6;
+            tab-size: 4;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #6e8aa8;
+            margin-top: 6px;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+            align-items: center;
+        }
+
+        .btn {
+            background: white;
+            border: 1.5px solid #d0dceb;
+            padding: 9px 22px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #1f3f5e;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background: #f0f5fe;
+            border-color: #9bb7d9;
+        }
+
+        .btn-primary {
+            background: #1a5fb0;
+            border-color: #1a5fb0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #124a8e;
+            border-color: #124a8e;
+        }
+
+        .btn-success {
+            background: #1d8a4f;
+            border-color: #1d8a4f;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #15703f;
+            border-color: #15703f;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: #b8ccdf;
+        }
+
+        .btn-outline:hover {
+            background: #eef4fa;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px 40px;
+            background: #eef4fb;
+            border-radius: 14px;
+            padding: 12px 22px;
+            margin: 16px 0 10px;
+            font-size: 14px;
+            color: #1f3f5e;
+        }
+
+        .stats span {
+            font-weight: 600;
+            color: #0b2b4a;
+        }
+
+        .preview-wrap {
+            margin-top: 20px;
+            border-top: 2px dashed #dce6f0;
+            padding-top: 22px;
+        }
+
+        .preview-wrap h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #0b2b4a;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 14px;
+            border: 1px solid #e3ebf3;
+            background: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+            min-width: 600px;
+        }
+
+        table th {
+            background: #eaf0f8;
+            color: #1a3b5a;
+            font-weight: 600;
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 2px solid #cddcec;
+            white-space: nowrap;
+        }
+
+        table td {
+            padding: 8px 14px;
+            border-bottom: 1px solid #e6eef6;
+            vertical-align: middle;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        table tr.group-total td {
+            background: #e6f0fa;
+            font-weight: 600;
+            border-top: 2px solid #b8cfe0;
+        }
+
+        .table-ie table td:first-child,
+        .table-ie table th:first-child {
+            padding-left: 16px;
+        }
+
+        .table-ie table td:last-child,
+        .table-ie table th:last-child {
+            padding-right: 16px;
+        }
+
+        .empty-state {
+            color: #7a97b5;
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 15px;
+        }
+
+        .copy-area {
+            margin-top: 18px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .copy-area textarea {
+            flex: 1;
+            min-height: 70px;
+            font-size: 12px;
+            background: #f8faff;
+            border-color: #d2dfec;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1d2f44;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 14px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: 0.3s ease;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            background: #dde7f3;
+            border-radius: 30px;
+            padding: 2px 14px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #1f4973;
+        }
+
+        .table-ie .table-ttl-col {
+            font-weight: 600;
+            color: #0b3b6b;
+        }
+
+        @media (max-width: 600px) {
+            .btn {
+                padding: 7px 16px;
+                font-size: 13px;
+            }
+            table {
+                font-size: 12px;
+            }
+            table th,
+            table td {
+                padding: 6px 10px;
+            }
+            .stats {
+                font-size: 13px;
+                padding: 10px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app" id="app">
+    <h1>
+        📋 Data → IE 转换器
+        <small>（自动识别末列作为团队名称）</small>
+    </h1>
+    <div class="subtitle">
+        <strong>কীভাবে ব্যবহার করবেন:</strong> 
+        ① “Data” শীট থেকে ডাটা কপি করুন (হেডার ছাড়া) &nbsp;→&nbsp; 
+        ② নিচের বক্সে পেস্ট করুন &nbsp;→&nbsp; 
+        ③ “প্রিভিউ &amp; কনভার্ট” ক্লিক করুন &nbsp;→&nbsp; 
+        ④ “IE” ফরম্যাটেড ডাটা কপি করে “IE” শীটে পেস্ট করুন।<br/>
+        <span style="color:#b22222;">✅ “Team Name” স্বয়ংক্রিয়ভাবে শেষ নন-খালি কলাম থেকে নেওয়া হবে (যেমন: 4, Team-1, A)</span>
+    </div>
+
+    <div class="grid-2col">
+        <!-- LEFT: Input -->
+        <div class="card">
+            <h3>
+                📥 ডাটা পেস্ট করুন
+                <span class="badge">Data sheet</span>
+            </h3>
+            <label for="dateInput">📅 তারিখ (ঐচ্ছিক, কোনো প্রভাব নেই)</label>
+            <input type="text" id="dateInput" placeholder="8/15/26 (ignored)" value="8/15/26" />
+
+            <label for="rawData" style="margin-top:14px;">📄 ডাটা পেস্ট করুন (হেডার ছাড়া)</label>
+            <textarea id="rawData" placeholder="এখানে Data শীট থেকে কপি করা ডাটা পেস্ট করুন...&#10;প্রতিটি কলাম ট্যাব (Tab) দিয়ে আলাদা থাকতে হবে।"></textarea>
+            <div class="hint">
+                ⚡ ডাটা অবশ্যই <strong>Tab</strong> সেপারেটেড হতে হবে (Excel থেকে কপি করলেই হয়)।
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" id="convertBtn">🔍 প্রিভিউ &amp; কনভার্ট</button>
+                <button class="btn btn-outline" id="clearBtn">🗑️ ক্লিয়ার</button>
+                <button class="btn btn-outline" id="sampleBtn">📌 নমুনা লোড</button>
+            </div>
+        </div>
+
+        <!-- RIGHT: Stats & Quick info -->
+        <div class="card">
+            <h3>
+                📊 ইনফো
+                <span class="badge">সংক্ষিপ্ত</span>
+            </h3>
+            <div id="statsBox" class="stats">
+                <div>📌 মোট রো: <span id="totalRows">0</span></div>
+                <div>📦 গ্রুপ: <span id="groupCount">0</span></div>
+                <div>🏷️ টেবিল: <span id="tableCount">0</span></div>
+            </div>
+            <div style="margin-top:6px; font-size:13px; color:#3f5e7a; background:#eef4fb; border-radius:12px; padding:10px 16px;">
+                <strong>📌 Column Mapping (Data → IE):</strong><br />
+                <span style="display:inline-block; margin-top:4px;">
+                    <span class="tag">Style</span> (Col 3) &nbsp;
+                    <span class="tag">Color</span> (Col 5) &nbsp;
+                    <span class="tag">Pcs/Marker</span> (Col 10) &nbsp;
+                    <span class="tag">Actual Lay</span> (Col 11) &nbsp;
+                    <span class="tag">Team Name</span> → <strong>শেষ নন-খালি কলাম</strong>
+                </span>
+                <br />
+                <span style="font-size:12px; color:#58748f;">Production = Pcs/Marker × Actual Lay</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview & Result -->
+    <div class="preview-wrap" id="resultArea" style="display:none;">
+        <div class="flex-between">
+            <h3>
+                📋 ফলাফল (IE ফরম্যাট)
+                <span class="badge" id="resultBadge">প্রস্তুত</span>
+            </h3>
+            <div>
+                <button class="btn btn-success" id="copyBtn">📋 কপি করুন</button>
+                <button class="btn btn-outline" id="copyRawBtn">📄 কাঁচা ডাটা কপি</button>
+            </div>
+        </div>
+
+        <div class="table-responsive table-ie" id="ieTableWrap">
+            <table id="ieTable">
+                <thead>
+                    <tr>
+                        <th>STYLE</th>
+                        <th>TABLE</th>
+                        <th>PLAN</th>
+                        <th>PRODUCTION</th>
+                        <th>TABLE TTL</th>
+                        <th>COLOR</th>
+                    </tr>
+                </thead>
+                <tbody id="ieTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="copy-area">
+            <textarea id="copyOutput" readonly placeholder="কপি করার জন্য টেক্সট আউটপুট..."></textarea>
+        </div>
+    </div>
+
+    <!-- Hidden preview raw data -->
+    <div class="preview-wrap" id="rawPreviewArea" style="display:none; margin-top:10px; border-top-color:#d0dceb;">
+        <h3 style="font-size:15px; color:#1f3f5e;">
+            🔎 পার্সড ডাটা প্রিভিউ
+            <span class="badge">যাচাই করুন</span>
+        </h3>
+        <div class="table-responsive" style="max-height:260px; overflow-y:auto;">
+            <table id="rawPreviewTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Style</th>
+                        <th>Color</th>
+                        <th>Pcs/M</th>
+                        <th>Lay</th>
+                        <th>Production</th>
+                        <th>Team → Table</th>
+                    </tr>
+                </thead>
+                <tbody id="rawPreviewBody"></tbody>
+            </table>
+        </div>
+        <div style="margin-top:10px; font-size:13px; color:#3f5e7a;">
+            ✅ মোট <span id="rawPreviewCount">0</span>টি রো পাওয়া গেছে (সব তারিখ একত্রে)।
+        </div>
+    </div>
+
+    <div style="margin-top:28px; border-top:1px solid #e2ebf3; padding-top:16px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:13px; color:#6a89a7;">
+        <span>⚡ SEWTECH FASHIONS LTD. — Daily Cutting Performance</span>
+        <span>🔄  সংস্করণ 4.0 (স্বয়ংক্রিয় টিম নাম)</span>
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script>
+    (function() {
+        'use strict';
+
+        // DOM refs
+        const dateInput = document.getElementById('dateInput');
+        const rawData = document.getElementById('rawData');
+        const convertBtn = document.getElementById('convertBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const sampleBtn = document.getElementById('sampleBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const copyRawBtn = document.getElementById('copyRawBtn');
+        const resultArea = document.getElementById('resultArea');
+        const rawPreviewArea = document.getElementById('rawPreviewArea');
+        const ieTableBody = document.getElementById('ieTableBody');
+        const rawPreviewBody = document.getElementById('rawPreviewBody');
+        const copyOutput = document.getElementById('copyOutput');
+        const totalRows = document.getElementById('totalRows');
+        const groupCount = document.getElementById('groupCount');
+        const tableCount = document.getElementById('tableCount');
+        const rawPreviewCount = document.getElementById('rawPreviewCount');
+        const resultBadge = document.getElementById('resultBadge');
+
+        function showToast(msg, duration = 2200) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => t.classList.remove('show'), duration);
+        }
+
+        function parseDataRows(text) {
+            const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+            const rows = [];
+            for (let line of lines) {
+                const cols = line.split('\t');
+                if (cols.length < 5) continue;
+                rows.push(cols);
+            }
+            return rows;
+        }
+
+        // Extract needed fields – team name is the LAST non-empty column
+        function extractRow(cols) {
+            const dateRaw = cols[0] || '';
+            const style = (cols[2] || '').trim();
+            const color = (cols[4] || '').trim();
+            const pcs = parseFloat((cols[9] || '').replace(/,/g, '').trim()) || 0;
+            const lay = parseFloat((cols[10] || '').replace(/,/g, '').trim()) || 0;
+            const production = pcs * lay;
+
+            // Find last non-empty column (team name)
+            let tableName = '';
+            for (let i = cols.length - 1; i >= 0; i--) {
+                const val = (cols[i] || '').trim();
+                if (val !== '') {
+                    tableName = val;
+                    break;
+                }
+            }
+            // If still empty, use '0'
+            if (tableName === '') tableName = '0';
+
+            return {
+                date: dateRaw,
+                style,
+                color,
+                pcs,
+                lay,
+                production,
+                table: tableName
+            };
+        }
+
+        // Sample data (updated with the user's real data example)
+        function getSampleData() {
+            return `9-Aug\tDay\tX001\t\tRAIN DRUM\t\tManual\t4\t\t2\t46\t3\t40\t55.50\t\t\t91.22\t92\t4
+        9-Aug\tDay\tX001\t\tRAIN DRUM\t\tManual\t5\t\t1\t30\t2\t15\t55.5\t\t\t85.5\t\t3
+        9-Aug\tDay\tSHIRT-A\t\tVIVID BLUE\t\tManual\t2\t\t6\t9\t7\t80\t56.5\t\t\t85.64\t54\t1
+        9-Aug\tDay\tSHIRT-A\t\tVIVID BLUE\t\tManual\t3\t\t6\t10\t7\t80\t56.5\t\t\t85.64\t60\t1`;
+        }
+
+        function convertData() {
+            const rawText = rawData.value;
+            if (!rawText.trim()) {
+                showToast('❌ দয়া করে ডাটা পেস্ট করুন।');
+                return;
+            }
+
+            const allRows = parseDataRows(rawText);
+            if (allRows.length === 0) {
+                showToast('❌ কোন ডাটা পাওয়া যায়নি। Tab সেপারেটেড ডাটা পেস্ট করুন।');
+                return;
+            }
+
+            const extracted = [];
+            for (let cols of allRows) {
+                const rec = extractRow(cols);
+                extracted.push(rec);
+            }
+
+            if (extracted.length === 0) {
+                showToast('❌ কোনো বৈধ ডাটা পাওয়া যায়নি।');
+                return;
+            }
+
+            totalRows.textContent = extracted.length;
+            renderRawPreview(extracted);
+
+            // Group by Table + Style + Color
+            const groups = new Map();
+            for (let rec of extracted) {
+                const key = `${rec.table}|${rec.style}|${rec.color}`;
+                if (!groups.has(key)) {
+                    groups.set(key, {
+                        table: rec.table,
+                        style: rec.style,
+                        color: rec.color,
+                        production: 0,
+                    });
+                }
+                groups.get(key).production += rec.production;
+            }
+
+            const tableMap = new Map();
+            for (let [key, val] of groups) {
+                const t = val.table;
+                if (!tableMap.has(t)) tableMap.set(t, []);
+                tableMap.get(t).push(val);
+            }
+
+            const sortedTables = Array.from(tableMap.keys()).sort((a, b) => {
+                const aNum = parseFloat(a);
+                const bNum = parseFloat(b);
+                if (!isNaN(aNum) && !isNaN(bNum)) return aNum - bNum;
+                return a.localeCompare(b);
+            });
+
+            groupCount.textContent = groups.size;
+            tableCount.textContent = sortedTables.length;
+
+            const ieRows = [];
+            for (let t of sortedTables) {
+                const items = tableMap.get(t);
+                items.sort((a, b) => a.style.localeCompare(b.style) || a.color.localeCompare(b.color));
+                const tableTotal = items.reduce((sum, it) => sum + it.production, 0);
+                let first = true;
+                for (let it of items) {
+                    ieRows.push({
+                        style: it.style,
+                        table: t,
+                        plan: '',
+                        production: Math.round(it.production),
+                        tableTtl: first ? Math.round(tableTotal) : '',
+                        color: it.color,
+                        isFirst: first,
+                    });
+                    first = false;
+                }
+            }
+
+            renderIETable(ieRows);
+            resultBadge.textContent = `${ieRows.length} রো`;
+            resultArea.style.display = 'block';
+            rawPreviewArea.style.display = 'block';
+
+            const copyText = generateCopyText(ieRows);
+            copyOutput.value = copyText;
+
+            showToast(`✅ রূপান্তর সম্পন্ন! ${ieRows.length}টি রো তৈরি হয়েছে।`);
+        }
+
+        function renderRawPreview(records) {
+            const tbody = rawPreviewBody;
+            tbody.innerHTML = '';
+            records.forEach((rec, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${idx + 1}</td>
+                    <td>${rec.date}</td>
+                    <td>${rec.style}</td>
+                    <td>${rec.color}</td>
+                    <td>${rec.pcs}</td>
+                    <td>${rec.lay}</td>
+                    <td>${Math.round(rec.production)}</td>
+                    <td>${rec.table}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            rawPreviewCount.textContent = records.length;
+        }
+
+        function renderIETable(rows) {
+            const tbody = ieTableBody;
+            tbody.innerHTML = '';
+            if (rows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="empty-state">কোন ডাটা নেই</td></tr>`;
+                return;
+            }
+
+            let currentTable = null;
+            for (let row of rows) {
+                if (currentTable !== null && currentTable !== row.table) {
+                    const sep = document.createElement('tr');
+                    sep.style.height = '6px';
+                    sep.innerHTML = `<td colspan="6" style="background:#eaf0f8; padding:0; border-bottom:2px solid #b8cfe0;"></td>`;
+                    tbody.appendChild(sep);
+                }
+                currentTable = row.table;
+                const tr = document.createElement('tr');
+                tr.className = row.isFirst ? 'group-total' : '';
+                const ttlVal = row.tableTtl !== '' ? row.tableTtl : '';
+                tr.innerHTML = `
+                    <td>${row.style}</td>
+                    <td>${row.table}</td>
+                    <td>${row.plan}</td>
+                    <td>${row.production}</td>
+                    <td class="${ttlVal !== '' ? 'table-ttl-col' : ''}">${ttlVal}</td>
+                    <td>${row.color}</td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        function generateCopyText(rows) {
+            let lines = ['STYLE\tTABLE\tPLAN\tPRODUCTION\tTABLE TTL\tCOLOR'];
+            let currentTable = null;
+            for (let row of rows) {
+                if (currentTable !== null && currentTable !== row.table) {
+                    lines.push('');
+                }
+                currentTable = row.table;
+                const ttl = row.tableTtl !== '' ? row.tableTtl : '';
+                lines.push(`${row.style}\t${row.table}\t${row.plan}\t${row.production}\t${ttl}\t${row.color}`);
+            }
+            return lines.join('\n');
+        }
+
+        function copyOutputText() {
+            const text = copyOutput.value;
+            if (!text) {
+                showToast('❌ কপি করার মতো কিছু নেই।');
+                return;
+            }
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('✅ ক্লিপবোর্ডে কপি করা হয়েছে!');
+            }).catch(() => {
+                copyOutput.select();
+                document.execCommand('copy');
+                showToast('✅ কপি করা হয়েছে!');
+            });
+        }
+
+        function copyRawData() {
+            const text = rawData.value;
+            if (!text.trim()) {
+                showToast('❌ ডাটা খালি।');
+                return;
+            }
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('✅ কাঁচা ডাটা কপি করা হয়েছে!');
+            }).catch(() => {
+                rawData.select();
+                document.execCommand('copy');
+                showToast('✅ কপি করা হয়েছে!');
+            });
+        }
+
+        function loadSample() {
+            rawData.value = getSampleData();
+            dateInput.value = '8/15/26';
+            showToast('📌 নমুনা ডাটা লোড করা হয়েছে। "প্রিভিউ & কনভার্ট" ক্লিক করুন।');
+        }
+
+        function clearAll() {
+            rawData.value = '';
+            dateInput.value = '';
+            resultArea.style.display = 'none';
+            rawPreviewArea.style.display = 'none';
+            ieTableBody.innerHTML = '';
+            rawPreviewBody.innerHTML = '';
+            copyOutput.value = '';
+            totalRows.textContent = '0';
+            groupCount.textContent = '0';
+            tableCount.textContent = '0';
+            rawPreviewCount.textContent = '0';
+            resultBadge.textContent = '—';
+            showToast('🗑️ ক্লিয়ার করা হয়েছে।');
+        }
+
+        convertBtn.addEventListener('click', convertData);
+        clearBtn.addEventListener('click', clearAll);
+        sampleBtn.addEventListener('click', loadSample);
+        copyBtn.addEventListener('click', copyOutputText);
+        copyRawBtn.addEventListener('click', copyRawData);
+
+        rawData.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                convertBtn.click();
+            }
+        });
+
+        resultArea.style.display = 'none';
+        rawPreviewArea.style.display = 'none';
+    })();
+</script>
+
+</body>
+</html>
