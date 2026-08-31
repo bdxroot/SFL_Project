@@ -1,438 +1,473 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excel Format Converter</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f6fa;
-            padding: 20px;
-            color: #333;
-        }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #2c3e50;
-            font-size: 22px;
-        }
-        .input-section {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 15px;
-        }
-        .input-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            font-size: 14px;
-            color: #555;
-        }
-        textarea {
-            width: 100%;
-            height: 70px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-family: 'Consolas', monospace;
-            font-size: 13px;
-            resize: vertical;
-        }
-        textarea:focus {
-            outline: none;
-            border-color: #3498db;
-        }
-        .extra-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 15px;
-            display: none;
-        }
-        .extra-grid.active {
-            display: grid;
-        }
-        .extra-grid input {
-            padding: 8px 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 13px;
-        }
-        .extra-grid input:focus {
-            outline: none;
-            border-color: #3498db;
-        }
-        .format-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            justify-content: center;
-        }
-        .format-tabs button {
-            padding: 10px 24px;
-            border: 2px solid #3498db;
-            background: #fff;
-            color: #3498db;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-        .format-tabs button:hover {
-            background: #ebf5fb;
-        }
-        .format-tabs button.active {
-            background: #3498db;
-            color: #fff;
-        }
-        .btn-generate {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background: #27ae60;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 15px;
-        }
-        .btn-generate:hover {
-            background: #219a52;
-        }
-        .preview-section {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            display: none;
-        }
-        .preview-section.show {
-            display: block;
-        }
-        .preview-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        .preview-title {
-            font-weight: 700;
-            font-size: 16px;
-            color: #2c3e50;
-        }
-        .btn-copy {
-            padding: 8px 20px;
-            background: #e74c3c;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13px;
-        }
-        .btn-copy:hover {
-            background: #c0392b;
-        }
-        .missing-alert {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            color: #856404;
-            padding: 10px 14px;
-            border-radius: 6px;
-            margin-bottom: 12px;
-            font-size: 13px;
-            display: none;
-        }
-        .missing-alert.show {
-            display: block;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-        th, td {
-            border: 1px solid #dee2e6;
-            padding: 8px 10px;
-            text-align: center;
-        }
-        th {
-            background: #f8f9fa;
-            font-weight: 700;
-            color: #495057;
-            white-space: nowrap;
-        }
-        td {
-            background: #fff;
-            font-weight: 500;
-        }
-        tr:hover td {
-            background: #f1f3f5;
-        }
-        .hidden-copy {
-            position: absolute;
-            left: -9999px;
-        }
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #27ae60;
-            color: #fff;
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-weight: 600;
-            display: none;
-            z-index: 1000;
-        }
-        .toast.show {
-            display: block;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cutting Data Formatter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEF1EF;
+    --panel:#FFFFFF;
+    --ink:#1B2422;
+    --ink-soft:#5B6663;
+    --line:#D6DBD8;
+    --chalk:#F0B429;
+    --thread:#C1443C;
+    --teal:#3F5B58;
+    --mono:'IBM Plex Mono', monospace;
+    --sans:'Inter', sans-serif;
+    --disp:'Oswald', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    padding:32px 16px 80px;
+  }
+  .wrap{max-width:900px;margin:0 auto;}
+
+  /* header + tape ruler */
+  header{margin-bottom:28px;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.18em;
+    color:var(--teal);
+    text-transform:uppercase;
+  }
+  h1{
+    font-family:var(--disp);
+    font-weight:700;
+    font-size:34px;
+    letter-spacing:.01em;
+    margin:4px 0 14px;
+    color:var(--ink);
+  }
+  .ruler{
+    height:18px;
+    background:
+      repeating-linear-gradient(90deg,
+        var(--ink) 0px, var(--ink) 1px,
+        transparent 1px, transparent 10px),
+      repeating-linear-gradient(90deg,
+        var(--ink) 0px, var(--ink) 1.5px,
+        transparent 1.5px, transparent 50px);
+    background-size:100% 8px, 100% 18px;
+    background-repeat:repeat-x;
+    background-position:bottom left, bottom left;
+    border-bottom:2px solid var(--ink);
+    opacity:.85;
+  }
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:22px;
+    margin-top:18px;
+  }
+  .panel-title{
+    font-family:var(--disp);
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--teal);
+    margin:0 0 14px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .panel-title .n{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--mono);
+    font-size:12px;
+    width:20px;height:20px;
+    border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;
+  }
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr;}}
+
+  label{
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  textarea, input[type=text]{
+    width:100%;
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--ink);
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:10px 12px;
+    resize:vertical;
+  }
+  textarea{min-height:64px;white-space:pre;overflow-x:auto;}
+  textarea:focus, input:focus{outline:2px solid var(--chalk);outline-offset:1px;border-color:var(--chalk);}
+
+  .field{margin-bottom:14px;}
+  .field:last-child{margin-bottom:0;}
+
+  /* format tabs */
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;}
+  .tab{
+    font-family:var(--disp);
+    font-size:13px;
+    letter-spacing:.03em;
+    padding:9px 16px;
+    border:1px solid var(--line);
+    border-radius:3px;
+    background:var(--paper);
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .tab.active{
+    background:var(--ink);
+    color:var(--chalk);
+    border-color:var(--ink);
+  }
+  .tab[disabled]{opacity:.45;cursor:not-allowed;}
+
+  .extra{display:none;margin-top:16px;}
+  .extra.show{display:block;}
+
+  button.go{
+    margin-top:18px;
+    font-family:var(--disp);
+    font-size:14px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    background:var(--thread);
+    color:#fff;
+    border:none;
+    padding:12px 22px;
+    border-radius:3px;
+    cursor:pointer;
+  }
+  button.go:hover{filter:brightness(1.08);}
+
+  .error{
+    margin-top:12px;
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:var(--thread);
+  }
+
+  /* output */
+  .out-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+  .copy-btn{
+    font-family:var(--mono);
+    font-size:12px;
+    background:var(--teal);
+    color:#fff;
+    border:none;
+    padding:8px 14px;
+    border-radius:3px;
+    cursor:pointer;
+  }
+  .copy-btn.copied{background:#2E7D32;}
+
+  table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:12.5px;}
+  th,td{border:1px dashed var(--line);padding:7px 9px;text-align:center;white-space:nowrap;}
+  thead th{
+    background:var(--ink);
+    color:var(--chalk);
+    font-weight:500;
+    border-color:var(--ink);
+  }
+  thead tr.sub th{
+    background:var(--teal);
+    color:#fff;
+    font-size:11px;
+  }
+  tbody td{background:var(--paper);}
+  .scrollx{overflow-x:auto;}
+
+  .missing{
+    margin-top:14px;
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--ink-soft);
+    background:var(--paper);
+    border-left:3px solid var(--chalk);
+    padding:8px 12px;
+  }
+  .missing b{color:var(--ink);}
+
+  #outputPanel{display:none;}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h2>Excel Format Converter</h2>
+<div class="wrap">
 
-        <div class="input-section">
-            <div class="input-group">
-                <label>Heading Input (Excel থেকে Copy করে Paste করুন)</label>
-                <textarea id="headingInput" placeholder="Heading row paste করুন..."></textarea>
-            </div>
+  <header>
+    <div class="eyebrow">Cutting Room / Data Formatter</div>
+    <h1>Format Converter</h1>
+    <div class="ruler"></div>
+  </header>
 
-            <div class="input-group">
-                <label>Data Input (Excel থেকে Copy করে Paste করুন)</label>
-                <textarea id="dataInput" placeholder="Data row(s) paste করুন..."></textarea>
-            </div>
+  <div class="panel">
+    <p class="panel-title"><span class="n">1</span>Excel থেকে কপি করা ডেটা পেস্ট করুন</p>
+    <div class="field">
+      <label>Heading Row</label>
+      <textarea id="headingInput" placeholder="XS  S  M  L  XL  XXL ... Pcs  No of Plies  Qty ..."></textarea>
+    </div>
+    <div class="field">
+      <label>Data Row(s)</label>
+      <textarea id="dataInput" placeholder="2  2  1  1  2  2 ... 10  93  930 ..."></textarea>
+    </div>
+  </div>
 
-            <div class="extra-grid" id="ieExtraInputs">
-                <div>
-                    <label>Color</label>
-                    <input type="text" id="colorInput" placeholder="Color">
-                </div>
-                <div>
-                    <label>Style</label>
-                    <input type="text" id="styleInput" placeholder="Style">
-                </div>
-                <div>
-                    <label>Table No</label>
-                    <input type="text" id="tableNoInput" placeholder="Table No">
-                </div>
-                <div>
-                    <label>Cut No</label>
-                    <input type="text" id="cutNoInput" placeholder="Cut No">
-                </div>
-            </div>
-
-            <div class="format-tabs">
-                <button class="active" onclick="selectFormat('cc')">CC Format</button>
-                <button onclick="selectFormat('ie1')">IE Format 1</button>
-                <button onclick="selectFormat('ie2')">IE Format 2</button>
-            </div>
-
-            <button class="btn-generate" onclick="generate()">Generate Preview</button>
-        </div>
-
-        <div class="preview-section" id="previewSection">
-            <div class="preview-header">
-                <span class="preview-title">Preview (শুধু Data Copy হবে, Heading নয়)</span>
-                <button class="btn-copy" onclick="copyData()">Copy Data</button>
-            </div>
-            <div class="missing-alert" id="missingAlert"></div>
-            <div id="previewTableContainer"></div>
-        </div>
+  <div class="panel">
+    <p class="panel-title"><span class="n">2</span>আউটপুট ফরম্যাট বেছে নিন</p>
+    <div class="tabs">
+      <button type="button" class="tab active" data-format="cc">CC Format</button>
+      <button type="button" class="tab" data-format="ie1">IE Format 1</button>
+      <button type="button" class="tab" disabled title="শীঘ্রই আসছে">IE Format 2</button>
     </div>
 
-    <textarea id="hiddenCopy" class="hidden-copy"></textarea>
-    <div class="toast" id="toast">Copied!</div>
+    <div class="extra" id="ie1Extra">
+      <div class="grid2">
+        <div class="field"><label>Style</label><input type="text" id="inStyle"></div>
+        <div class="field"><label>Color</label><input type="text" id="inColor"></div>
+        <div class="field"><label>Table No</label><input type="text" id="inTableNo"></div>
+        <div class="field"><label>Cutting No</label><input type="text" id="inCutNo"></div>
+      </div>
+    </div>
 
-    <script>
-        let currentFormat = 'cc';
-        let copyText = '';
+    <button class="go" id="generateBtn">Generate</button>
+    <div class="error" id="errorBox"></div>
+  </div>
 
-        function selectFormat(fmt) {
-            currentFormat = fmt;
-            document.querySelectorAll('.format-tabs button').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById('ieExtraInputs').classList.toggle('active', fmt === 'ie1');
-            document.getElementById('previewSection').classList.remove('show');
-        }
+  <div class="panel" id="outputPanel">
+    <div class="out-head">
+      <p class="panel-title" style="margin:0"><span class="n">3</span>প্রিভিউ</p>
+      <button class="copy-btn" id="copyBtn">Copy Data</button>
+    </div>
+    <div class="scrollx"><table id="outTable"></table></div>
+    <div class="missing" id="missingBox" style="display:none"></div>
+  </div>
 
-        function parseTabData(text) {
-            return text.split('\n').map(row => row.split('\t').map(v => v.trim()));
-        }
+</div>
 
-        function getCleanHeadings(headings) {
-            return headings.map((h, i) => ({ name: h, index: i, lower: h.toLowerCase() }))
-                          .filter(h => h.name !== '');
-        }
+<script>
+let currentFormat = 'cc';
 
-        function findIndex(cleanHeadings, names) {
-            for (let name of names) {
-                const found = cleanHeadings.find(h => h.lower === name.toLowerCase());
-                if (found) return found.index;
-            }
-            return -1;
-        }
+document.querySelectorAll('.tab[data-format]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab[data-format]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFormat = btn.dataset.format;
+    document.getElementById('ie1Extra').classList.toggle('show', currentFormat==='ie1');
+    document.getElementById('outputPanel').style.display='none';
+  });
+});
 
-        function findValue(headings, data, names) {
-            const idx = findIndex(getCleanHeadings(headings), names);
-            return idx >= 0 ? (data[idx] || '') : '';
-        }
+// Split a whole textarea's text into an array of rows, each row an array of cells.
+// Blank lines are ignored so trailing newlines etc. don't create empty rows.
+function splitRows(text){
+  return (text||'')
+    .replace(/\r/g,'')
+    .split('\n')
+    .filter(line=>line.trim()!=='')
+    .map(line=>line.split('\t'));
+}
+function normalize(s){
+  return (s||'').trim().toLowerCase().replace(/\s+/g,' ');
+}
+function fmtNum(n){
+  if(!isFinite(n)) return '';
+  if(Math.abs(n-Math.round(n))<1e-9) return String(Math.round(n));
+  return String(Math.round(n*100)/100);
+}
+const eq = s => k => k===s;
+const has = (...ws) => k => ws.every(w=>k.includes(w));
 
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2000);
-        }
+// Build the {sizes, F} map for a single data row against a single heading row.
+function buildRowMap(headers, data, pcsIndex){
+  const len = Math.max(headers.length, data.length);
+  headers = headers.slice();
+  data = data.slice();
+  while(headers.length<len) headers.push('');
+  while(data.length<len) data.push('');
 
-        function generate() {
-            const headingText = document.getElementById('headingInput').value;
-            const dataText = document.getElementById('dataInput').value;
+  const sizes=[];
+  for(let i=0;i<pcsIndex;i++){
+    if(headers[i] && headers[i].trim()!=='') sizes.push({name:headers[i].trim(), value:data[i]||''});
+  }
 
-            if (!headingText.trim() || !dataText.trim()) {
-                alert('Heading এবং Data দুটোই দিন');
-                return;
-            }
+  const namedMap={};
+  for(let i=pcsIndex;i<len;i++){
+    const h=normalize(headers[i]);
+    if(h && !(h in namedMap)) namedMap[h]=(data[i]||'');
+  }
 
-            const headings = headingText.split('\t').map(h => h.trim());
-            const dataRows = parseTabData(dataText);
+  function getField(matchers){
+    for(const m of matchers){
+      for(const k in namedMap){
+        if(m(k)) return {value:(namedMap[k]||'').trim(), found:true};
+      }
+    }
+    return {value:'', found:false};
+  }
 
-            if (currentFormat === 'cc') {
-                generateCC(headings, dataRows);
-            } else if (currentFormat === 'ie1') {
-                generateIE1(headings, dataRows);
-            } else if (currentFormat === 'ie2') {
-                alert('IE Format 2 - Coming Soon');
-                return;
-            }
-        }
+  const F = {
+    pcs: getField([eq('pcs')]),
+    plies: getField([eq('no of plies'), eq('lay')]),
+    markerCW: getField([has('marker','c/w'), has('marker','cw')]),
+    yds: getField([eq('yds')]),
+    inch: getField([eq('inch')]),
+    netYards: getField([eq('net yards')]),
+    meff: getField([has('eff')]),
+    cutdate: getField([has('cut','date')]),
+  };
 
-        function generateCC(headings, dataRows) {
-            const clean = getCleanHeadings(headings);
-            const pcsIdx = findIndex(clean, ['pcs']);
-            const layIdx = findIndex(clean, ['no of plies', 'lay', 'no. of plies', 'plies']);
+  return {sizes, F};
+}
 
-            if (pcsIdx === -1) {
-                alert('Heading এ "Pcs" খুঁজে পাওয়া যায়নি');
-                return;
-            }
-            if (layIdx === -1) {
-                alert('Heading এ "No of Plies" বা "Lay" খুঁজে পাওয়া যায়নি');
-                return;
-            }
+// Build maps for every data row pasted in, all against the single heading row.
+function buildMap(){
+  const headerRows = splitRows(document.getElementById('headingInput').value);
+  const dataRows = splitRows(document.getElementById('dataInput').value);
 
-            const sizeCols = clean.filter(h => h.index < pcsIdx);
-            const sizeNames = sizeCols.map(h => h.name);
+  if(headerRows.length===0) return {error:'Heading Row খালি।'};
+  if(dataRows.length===0) return {error:'Data Row খালি।'};
 
-            let outputRows = [];
-            let previewHtml = '<table><tr>' + sizeNames.map(s => '<th>' + s + '</th>').join('') + '</tr>';
+  const headers = headerRows[0];
+  const pcsIndex = headers.findIndex(h=>normalize(h)==='pcs');
+  if(pcsIndex===-1) return {error:'হেডিং-এ "Pcs" কলাম পাওয়া যায়নি।'};
 
-            for (let row of dataRows) {
-                if (row.length === 0) continue;
-                const lay = parseFloat(row[layIdx]) || 0;
-                const outVals = sizeCols.map(h => {
-                    const v = parseFloat(row[h.index]) || 0;
-                    return v * lay;
-                });
-                outputRows.push(outVals.join('\t'));
-                previewHtml += '<tr>' + outVals.map(v => '<td>' + v + '</td>').join('') + '</tr>';
-            }
-            previewHtml += '</table>';
+  const rows = dataRows.map(data => buildRowMap(headers, data, pcsIndex));
+  return {rows};
+}
 
-            copyText = outputRows.join('\n');
-            document.getElementById('previewTableContainer').innerHTML = previewHtml;
-            document.getElementById('missingAlert').classList.remove('show');
-            document.getElementById('previewSection').classList.add('show');
-        }
+function renderCC(rows){
+  const table = document.getElementById('outTable');
 
-        function generateIE1(headings, dataRows) {
-            const color = document.getElementById('colorInput').value.trim();
-            const style = document.getElementById('styleInput').value.trim();
-            const tableNo = document.getElementById('tableNoInput').value.trim();
-            const cutNo = document.getElementById('cutNoInput').value.trim();
+  // size names come from the heading row, same across every data row
+  const sizeNames = rows[0].sizes.map(s=>s.name);
 
-            let missing = [];
+  const bodyRows = rows.map(({sizes, F})=>{
+    const pliesNum = parseFloat(F.plies.value);
+    const values = sizes.map(s=>{
+      const n = parseFloat(String(s.value).trim());
+      if(!n || isNaN(n) || isNaN(pliesNum)) return '';
+      return fmtNum(n*pliesNum);
+    });
+    return values;
+  });
 
-            const ieHeaders = [
-                'Date', 'Shift', 'Style', 'Group\nQuantity', 'Color', 'Product Type', 
-                'AREA', 'Cutting\nNo', 'Pattern No.', 'Pcs / Marker', 'Actual Lay', 
-                'Marker Length\nYDS', 'Marker Length\nINCH', 'Marker Width', 
-                'Perimeter\nYDS', 'Perimeter\nINCH', 'Marker\nEfficiency %', 
-                'Production', 'Team\nName'
-            ];
+  table.innerHTML =
+    '<thead><tr>'+sizeNames.map(n=>`<th>${n}</th>`).join('')+'</tr></thead>'+
+    '<tbody>'+bodyRows.map(values=>'<tr>'+values.map(v=>`<td>${v}</td>`).join('')+'</tr>').join('')+'</tbody>';
 
-            let outputRows = [];
-            let previewHtml = '<table><tr>' + ieHeaders.map(h => '<th>' + h.replace(/\n/g, '<br>') + '</th>').join('') + '</tr>';
+  document.getElementById('missingBox').style.display='none';
+  document.getElementById('copyBtn').dataset.copy = bodyRows.map(values=>values.join('\t')).join('\n');
+  document.getElementById('outputPanel').style.display='block';
+}
 
-            for (let row of dataRows) {
-                if (row.length === 0) continue;
+function renderIE1(rows){
+  const style = document.getElementById('inStyle').value.trim();
+  const color = document.getElementById('inColor').value.trim();
+  const tableNo = document.getElementById('inTableNo').value.trim();
+  const cutNo = document.getElementById('inCutNo').value.trim();
 
-                const pcs = findValue(headings, row, ['pcs']);
-                const noOfPlies = findValue(headings, row, ['no of plies', 'lay', 'no. of plies', 'plies']);
-                const yds = findValue(headings, row, ['yds', 'yards']);
-                const inch = findValue(headings, row, ['inch']);
-                const markerWidth = findValue(headings, row, ['marker c/w("', 'marker c/w', 'marker cw', 'marker c/w("']);
-                const mEff = findValue(headings, row, ['m/ eff', 'm eff', 'efficiency', 'm/eff']);
-                const cutDate = findValue(headings, row, ['cut date']);
+  const headRow1 = ['Date','Shift','Style','Group Quantity','Color','Product Type','AREA','Cutting No','Pattern No.','Pcs / Marker','Actual Lay','Marker Length','','Marker Width','Perimeter','','Marker Efficiency %','Production','Team Name'];
+  const colspan = {11:2, 14:2};
+  const skip = new Set([12,15]);
 
-                const production = ((parseFloat(pcs) || 0) * (parseFloat(noOfPlies) || 0)).toString();
+  let head1='<tr>';
+  headRow1.forEach((h,i)=>{
+    if(skip.has(i)) return;
+    const cs = colspan[i]?` colspan="${colspan[i]}"`:'';
+    head1+=`<th${cs}>${h}</th>`;
+  });
+  head1+='</tr>';
 
-                const outRow = [
-                    cutDate, 'Day', style, '', color, '', 'Manual', cutNo, '', 
-                    pcs, noOfPlies, yds, inch, markerWidth, yds, '', mEff, production, tableNo
-                ];
+  const sub = Array(19).fill('');
+  sub[11]='YDS'; sub[12]='INCH'; sub[14]='YDS'; sub[15]='INCH';
+  const head2 = '<tr class="sub">'+sub.map(s=>`<th>${s}</th>`).join('')+'</tr>';
 
-                outputRows.push(outRow.join('\t'));
-                previewHtml += '<tr>' + outRow.map(v => '<td>' + (v || '') + '</td>').join('') + '</tr>';
+  const bodyDataRows = rows.map(({F})=>{
+    return [
+      F.cutdate.value, 'Day', style, '', color, '', 'Manual', cutNo, '',
+      F.pcs.value, F.plies.value, F.yds.value, F.inch.value, F.markerCW.value,
+      F.netYards.value, '', F.meff.value, '', tableNo
+    ];
+  });
 
-                if (!cutDate) missing.push('CUT DATE');
-                if (!pcs) missing.push('Pcs');
-                if (!noOfPlies) missing.push('No of Plies / Lay');
-                if (!color) missing.push('Color (extra)');
-                if (!style) missing.push('Style (extra)');
-                if (!cutNo) missing.push('Cut No (extra)');
-                if (!tableNo) missing.push('Table No (extra)');
-            }
-            previewHtml += '</table>';
+  const bodyHtml = bodyDataRows.map(row=>'<tr>'+row.map(v=>`<td>${v}</td>`).join('')+'</tr>').join('');
 
-            copyText = outputRows.join('\n');
-            document.getElementById('previewTableContainer').innerHTML = previewHtml;
+  const table = document.getElementById('outTable');
+  table.innerHTML = `<thead>${head1}${head2}</thead><tbody>${bodyHtml}</tbody>`;
 
-            const missingAlert = document.getElementById('missingAlert');
-            const uniqueMissing = [...new Set(missing)];
-            if (uniqueMissing.length > 0) {
-                missingAlert.innerHTML = '⚠️ Missing: ' + uniqueMissing.join(', ');
-                missingAlert.classList.add('show');
-            } else {
-                missingAlert.classList.remove('show');
-            }
+  // column availability comes from the heading row, so it's the same for every data row —
+  // checking the first row's F is enough.
+  const F0 = rows[0].F;
+  const required = {
+    'Date (CUT DATE)': F0.cutdate,
+    'Pcs / Marker (Pcs)': F0.pcs,
+    'Actual Lay (No of Plies)': F0.plies,
+    'Marker Length YDS (Yds)': F0.yds,
+    'Marker Length INCH (Inch)': F0.inch,
+    'Marker Width (Marker C/W)': F0.markerCW,
+    'Perimeter YDS (Net Yards)': F0.netYards,
+    'Marker Efficiency % (M/ Eff)': F0.meff,
+  };
+  const missing = Object.entries(required).filter(([,v])=>!v.found).map(([k])=>k);
+  const missingBox = document.getElementById('missingBox');
+  if(missing.length){
+    missingBox.style.display='block';
+    missingBox.innerHTML = '<b>হেডিং-এ পাওয়া যায়নি:</b> '+missing.join(', ');
+  } else {
+    missingBox.style.display='none';
+  }
 
-            document.getElementById('previewSection').classList.add('show');
-        }
+  document.getElementById('copyBtn').dataset.copy = bodyDataRows.map(row=>row.join('\t')).join('\n');
+  document.getElementById('outputPanel').style.display='block';
+}
 
-        function copyData() {
-            const hidden = document.getElementById('hiddenCopy');
-            hidden.value = copyText;
-            hidden.select();
-            document.execCommand('copy');
-            showToast('Data Copied!');
-        }
-    </script>
+document.getElementById('generateBtn').addEventListener('click', ()=>{
+  const errorBox = document.getElementById('errorBox');
+  errorBox.textContent='';
+
+  if(!document.getElementById('headingInput').value.trim() || !document.getElementById('dataInput').value.trim()){
+    errorBox.textContent = 'Heading এবং Data দুটোই পেস্ট করুন।';
+    return;
+  }
+
+  const result = buildMap();
+  if(result.error){
+    errorBox.textContent = result.error;
+    document.getElementById('outputPanel').style.display='none';
+    return;
+  }
+
+  if(currentFormat==='cc') renderCC(result.rows);
+  else renderIE1(result.rows);
+});
+
+document.getElementById('copyBtn').addEventListener('click', function(){
+  const text = this.dataset.copy || '';
+  navigator.clipboard.writeText(text).then(()=>{
+    this.textContent='Copied';
+    this.classList.add('copied');
+    setTimeout(()=>{ this.textContent='Copy Data'; this.classList.remove('copied'); }, 1400);
+  });
+});
+</script>
 </body>
 </html>
