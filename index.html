@@ -456,7 +456,7 @@
 </head>
 <body>
 
-<div class="content-psrt-A" id="content-psrt-A" style="display: none;">
+<div class="content-psrt-A" id="content-psrt-A">
     <header>
         <div class="brand-container">
             <div class="brand-text">Sewtech Fashion Limited</div>
@@ -512,12 +512,7 @@
     </footer>
 </div>
 
-<div class="content-part-B" id="content-part-B">
-    <div class="hash-container">
-        <label for="hash">🔒 Hash Verification Required</label>
-        <input type="text" id="hash" placeholder="Enter full hash code here..." oninput="handle_part_B()">
-    </div>
-</div>
+
 
 <script>
     // ---------- STYLES & BOM DATABASE ----------
@@ -720,89 +715,9 @@
 
     renderStyles();
 
-    // ---------- NEW AUTOMATIC HASH & TIMER SYSTEM (4 HOURS) ----------
-    let timerInterval = null;
-
-    function handle_part_B() {
-        const data = "81dc9";
-        const hash = "bdb";
-        const password = "52d04dc20036dbd8313ed055";
-        const allHash = data + hash + password; // 81dc9bdb52d04dc20036dbd8313ed055
-
-        const hashInput = document.getElementById('hash');
-        if (hashInput) {
-            const userHash = hashInput.value.trim();
-            if (userHash === allHash) {
-                // বর্তমান সময় এবং ৪ ঘণ্টা পরের এক্সপায়ারি টাইম মিলিগ্রামে সেভ করা হচ্ছে
-                const now = new Date().getTime();
-                const expiryTime = now + (4 * 60 * 60 * 1000); // ৪ ঘণ্টা মিলি-সেকেন্ডে
-
-                localStorage.setItem('hash_verified', 'true');
-                localStorage.setItem('hash_expiry', expiryTime.toString());
-
-                activateApp();
-            }
-        }
-    }
-
-    function activateApp() {
-        document.getElementById('content-psrt-A').style.display = 'block';
-        document.getElementById('content-part-B').style.display = 'none';
-        startTimer();
-    }
-
-    function deactivateApp() {
-        document.getElementById('content-psrt-A').style.display = 'none';
-        document.getElementById('content-part-B').style.display = 'flex';
-        document.getElementById('hash').value = '';
-        localStorage.removeItem('hash_verified');
-        localStorage.removeItem('hash_expiry');
-        if (timerInterval) clearInterval(timerInterval);
-    }
-
-    function startTimer() {
-        if (timerInterval) clearInterval(timerInterval);
-
-        const expiryTime = parseInt(localStorage.getItem('hash_expiry') || '0');
-        const timerDisplay = document.getElementById('sessionTimer');
-
-        timerInterval = setInterval(() => {
-            const now = new Date().getTime();
-            const timeLeft = expiryTime - now;
-
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                deactivateApp();
-            } else {
-                // ঘণ্টা, মিনিট এবং সেকেন্ড হিসাব করা
-                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-                // সুন্দর ফরম্যাট (যেমন: 03:45:12) তৈরি করা
-                const formattedTime = 
-                    String(hours).padStart(2, '0') + ":" + 
-                    String(minutes).padStart(2, '0') + ":" + 
-                    String(seconds).padStart(2, '0');
-
-                if (timerDisplay) {
-                    timerDisplay.innerText = "⏳ Remaining: " + formattedTime;
-                }
-            }
-        }, 1000);
-    }
-
-    // পেজ লোড বা রিফ্রেশ হওয়ার সাথে সাথেই সেশন চেক করার লজিক
+    // App starts directly without hash verification.
     window.onload = function() {
-        const isVerified = localStorage.getItem('hash_verified');
-        const expiryTime = parseInt(localStorage.getItem('hash_expiry') || '0');
-        const now = new Date().getTime();
-
-        if (isVerified === 'true' && expiryTime > now) {
-            activateApp();
-        } else {
-            deactivateApp();
-        }
+        activateApp();
     };
 </script>
 
